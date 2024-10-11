@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/joworkspacesadmin/static/css/main.7962b5d5.css",
+    "main.js": "/joworkspacesadmin/static/js/main.9b9550ed.js",
+    "static/js/453.055045bf.chunk.js": "/joworkspacesadmin/static/js/453.055045bf.chunk.js",
+    "static/media/pdf.worker.min.mjs": "/joworkspacesadmin/static/media/pdf.worker.min.8bec976a1a536e55abd8.mjs",
+    "static/media/logo.png": "/joworkspacesadmin/static/media/logo.b0a01472eb991a87518d.png",
+    "static/media/BgImage.png": "/joworkspacesadmin/static/media/BgImage.5b2c18c84540c261c8c2.png",
+    "static/media/Applogo.png": "/joworkspacesadmin/static/media/Applogo.01fc05fd15c1c48f1ce3.png",
+    "index.html": "/joworkspacesadmin/index.html",
+    "main.7962b5d5.css.map": "/joworkspacesadmin/static/css/main.7962b5d5.css.map",
+    "main.9b9550ed.js.map": "/joworkspacesadmin/static/js/main.9b9550ed.js.map",
+    "453.055045bf.chunk.js.map": "/joworkspacesadmin/static/js/453.055045bf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7962b5d5.css",
+    "static/js/main.9b9550ed.js"
+  ]
+}
