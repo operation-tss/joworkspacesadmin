@@ -5,14 +5,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Dropdown } from "../../components/Dropdown/Dropdown";
+import download from "../../assets/download.png";
+import cross from "../../assets/cross.png";
+import { pdfjs } from "react-pdf";
+import { Document, Page } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 3%;
   padding-bottom: 5%;
-  padding-left: 20%;
-  padding-right: 20%;
+  padding-left: 10%;
+  padding-right: 10%;
   min-height: 80vh;
   h1 {
     color: #fab005;
@@ -63,13 +72,14 @@ const Home = () => {
   const [openYear, setOpenYear] = useState(false);
   const [yearValue, setYearValue] = useState(currentYear);
   const [yearItems, setYearItems] = useState(generateYearItems(2020, 2050));
-
+  const [numPages, setNumPages] = useState();
+  const [pageNumber, setPageNumber] = useState(1);
   //cutomer Dropdown
   const [openCustomer, setOpenCustomer] = useState(false);
   const [customerValue, setCustomerValue] = useState("");
   const [customerItem, setCustomerItem] = useState([]);
   const [error, setError] = useState({});
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     fetchCusData();
@@ -138,6 +148,10 @@ const Home = () => {
     checkUser();
   }, []);
 
+  function onDocumentLoadSuccess(numPages) {
+    setNumPages(numPages);
+  }
+
   const handleUpload = async () => {
     try {
       // const valid = validate();
@@ -148,9 +162,9 @@ const Home = () => {
         uri: file,
       });
       // return;
-      console.log(monthValue[0].value)
-      console.log(yearValue[0].value)
-      console.log(customerValue[0].value)
+      console.log(monthValue[0].value);
+      console.log(yearValue[0].value);
+      console.log(customerValue[0].value);
       setLoading(true);
       const formdata = new FormData();
       formdata.append("Files", file, file.name);
@@ -220,112 +234,297 @@ const Home = () => {
   };
 
   return (
-    <Wrapper>
+    <div style={{width: '100%', alignItems: 'center',justifyContent: 'center',}}>
       {loading ? (
         <p>loading</p>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            backgroundColor: "#f5eceb",
-            width: "100%",
-            padding: "5%",
-            borderRadius: 20,
-          }}
-        >
-          <p style={{ fontWeight: "700", fontSize: 20 }}>Invoice Upload Form</p>
-          <div style={{ display: "flex", flexDirection: "row", columnGap: 20 }}>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "start",
-                columnGap: 20,
-                // marginBottom: 20,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                }}
-              >
-                Month
-              </p>
-              <Dropdown options={monthItems} setValues={setMonthValue} />
-            </div>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "start",
-                columnGap: 20,
-                // marginBottom: 20,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                }}
-              >
-                Year
-              </p>
-              <Dropdown options={yearItems} setValues={setYearValue} />
-            </div>
-          </div>
+        <div style={{ display: "flex", flexDirection: "row", columnGap: 50,padding: '10%' }}>
           <div
             style={{
-              width: "100%",
               display: "flex",
               flexDirection: "column",
-              alignItems: "start",
-              columnGap: 20,
-              marginBottom: 20,
+              backgroundColor: "#f5eceb",
+              width: "80%",
+              padding: "5%",
+              borderRadius: 20,
             }}
           >
+            <p style={{ fontWeight: "700", fontSize: 20 }}>
+              Invoice Upload Form
+            </p>
+            <div
+              style={{ display: "flex", flexDirection: "row", columnGap: 20 }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  columnGap: 20,
+                  // marginBottom: 20,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "oswald",
+                    fontWeight: "bold",
+                    color: "#236fa1",
+                  }}
+                >
+                  Month
+                </p>
+                <Dropdown options={monthItems} setValues={setMonthValue} />
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  columnGap: 20,
+                  // marginBottom: 20,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "oswald",
+                    fontWeight: "bold",
+                    color: "#236fa1",
+                  }}
+                >
+                  Year
+                </p>
+                <Dropdown options={yearItems} setValues={setYearValue} />
+              </div>
+            </div>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",
+                columnGap: 20,
+                marginBottom: 20,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "oswald",
+                  fontWeight: "bold",
+                  color: "#236fa1",
+                }}
+              >
+                Customer
+              </p>
+              <Dropdown options={customerItem} setValues={setCustomerValue} />
+            </div>
+
+            <div
+              style={{
+                width: "100%",
+                height: 150,
+                border: "1px solid black",
+                borderRadius: 10,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+              }}
+            >
+              <input
+                type="file"
+                style={{ color: "#236fa1" }}
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+            </div>
+
+            <div
+              onClick={() => {
+                handleUpload();
+              }}
+              style={{
+                width: "30%",
+                backgroundColor: "#5bbf58",
+                alignSelf: "center",
+                borderRadius: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                color: "#fff",
+                fontWeight: "500",
+                marginBottom: 20,
+              }}
+            >
+              Submit
+            </div>
             <p
               style={{
+                width: "100%",
+                fontSize: 18,
                 fontFamily: "oswald",
                 fontWeight: "bold",
                 color: "#236fa1",
               }}
             >
-              Customer
+              Uploaded Receipts
             </p>
-            <Dropdown options={customerItem} setValues={setCustomerValue} />
-          </div>
+            {console.log("data", data)}
+            {data.length ? (
+              data.map((item) => {
+                const invoicedata = item;
+                console.log("itrm", item);
+                return (
+                  <div
+                    style={{
+                      backgroundColor: "#fff",
+                      padding: 20,
+                      borderRadius: 10,
+                      boxShadow: "3px 3px lightgray",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "45%",
+                          fontSize: 18,
+                          fontFamily: "oswald",
+                          fontWeight: "bold",
+                          color: "#236fa1",
+                          textAlign: "start",
+                        }}
+                      >
+                        Name:
+                      </div>
+                      <div
+                        style={{ width: "55%", fontSize: 18, textAlign: "end" }}
+                      >
+                        {console.log(invoicedata?.mst_customer_name)}
+                        {invoicedata?.mst_customer_name}
+                      </div>
+                    </div>
 
-          <input
-            type="file"
-            style={{ marginBottom: 20, color: "#236fa1" }}
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "45%",
+                          fontSize: 18,
+                          fontFamily: "oswald",
+                          fontWeight: "bold",
+                          color: "#236fa1",
+                          textAlign: "start",
+                        }}
+                      >
+                        Date :
+                      </div>
+                      <div
+                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
+                      >
+                        {invoicedata?.MST_UPLOAD_INVOICE_MONTHS}
+                        {invoicedata?.MST_UPLOAD_INVOICE_YEAR}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                        paddingTop: 6,
+                      }}
+                    >
+                      {/* <p
+              style={{
+                width: '45%',
+                fontSize: 18,
+                color: 'darkgray',
+                fontWeight: '600',
+              }}>
+              Invoice:
+            </p> */}
+                      {/* <Icon name="file-pdf-box" size={50} style={{color: COLORS.GREEN}} /> */}
+                      <div style={{ backgroundColor: "blue" }}></div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingTop: 6,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "45%",
+                          fontSize: 15,
+                          fontFamily: "oswald",
+                          fontWeight: "bold",
+                          color: "#236fa1",
+                          textAlign: "start",
+                        }}
+                      >
+                        Download :
+                      </div>
+                      <a
+                        download={true}
+                        href={item?.MST_UPLOAD_INVOICE_PATH}
+                        target="_blank"
+                        style={{ alignSelf: "flex-end" }}
+                      >
+                        <img src={download} style={{ width: 30, height: 30 }} />
+                      </a>
+                      {/* <Icon
+              onPress={() =>
+                downloadFunction(invoicedata?.MST_UPLOAD_INVOICE_PATH)
+              }
+              name="download"
+              size={30}
+              style={{color: COLORS.GREEN, marginLeft: 10}}
+            /> */}
+                      {/* <div style={{ backgroundColor: "blue" }}></div> */}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p>No data found</p>
+            )}
+          </div>
           <div
-            onClick={() => {
-              handleUpload();
-            }}
             style={{
-              width: "30%",
-              backgroundColor: "#5bbf58",
-              alignSelf: "center",
-              borderRadius: 10,
-              paddingTop: 10,
-              paddingBottom: 10,
-              color: "#fff",
-              fontWeight: "500",
+              position: "relative",
+              width: "50%",
+              height: 150,
+              width: 200,
             }}
           >
-            Submit
+            <Document
+              file={file}
+              onLoadSuccess={onDocumentLoadSuccess}
+              style={{ height: 150 }}
+            >
+              <Page height={150} width={300} pageNumber={1} />
+            </Document>
           </div>
         </div>
       )}
-    </Wrapper>
+    </div>
   );
 };
 

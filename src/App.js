@@ -7,6 +7,7 @@ import Projects from "./pages/Projects";
 import Til from "./pages/Til";
 import Diary from "./pages/Diary";
 import { Login } from "./pages/Auth/Login/Login";
+import { DeleteAccount } from "./pages/DeleteAccount/DeleteAccount";
 
 export default function App() {
   const user = localStorage.getItem("user");
@@ -18,6 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
+          <Route path="/deleteAccount" element={<DeleteAccount />} />
           <Route path="/about" element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/Til" element={<Til />} />

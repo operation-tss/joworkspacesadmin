@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
-import logo from "../../assets/logo.png"
-import Applogo from "../../assets/Applogo.png"
-import './Header.css'
+import logo from "../../assets/logo.png";
+import Applogo from "../../assets/Applogo.png";
+import "./Header.css";
 
 const StyledHeader = styled.header`
-  background-color: #E2E8B2;
+  background-color: #e2e8b2;
   width: 100%;
   display: flex;
   align-items: center;
@@ -58,7 +58,7 @@ const NavManu = styled.ul`
     display: block;
     padding: 10px 10px;
     text-align: left;
-    font-weight: 500
+    font-weight: 500;
   }
   @media screen and (max-width: 768px) {
     display: ${(props) => (props.isToggleOpen ? "block" : "none")};
@@ -69,25 +69,24 @@ const NavManu = styled.ul`
   }
 `;
 
-const Header = ({user}) => {
+const Header = ({ user }) => {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
   const handleToggleOpen = () => {
     setIsToggleOpen(!isToggleOpen);
   };
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     setTimeout(() => {
       if (!user) {
-        setLoading(false)
-        navigate("/login")
+        setLoading(false);
+        navigate("/login");
       }
-      setLoading(false)
-      
-    },2000)
-  },[])
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   return (
     <>
@@ -95,14 +94,23 @@ const Header = ({user}) => {
         <div className="nav_logo">
           <Link to={"/"} className="nav-logo-link">
             <img src={Applogo} className="logo" alt="" />
-            <p style={{textAlign: 'center',color: '#000',fontWeight: '500', fontSize: 16,}}>workspaces.com</p>
+            <p
+              style={{
+                textAlign: "center",
+                color: "#000",
+                fontWeight: "500",
+                fontSize: 16,
+              }}
+            >
+              workspaces.com
+            </p>
           </Link>
         </div>
 
         <NavManu isToggleOpen={isToggleOpen}>
           <li>
-            <Link to={"/"} className="nav-menu-list">
-              {/* Upload Invoice */}
+            <Link to={"/deleteAccount"} className="nav-menu-list">
+              Delete Account
             </Link>
           </li>
           {/* <li>
@@ -116,16 +124,27 @@ const Header = ({user}) => {
             </Link>
           </li>*/}
           <li>
-
-            {user ?
-            
-            <Link to={"/login"} onClick={()=> {localStorage.removeItem('user');navigate("/login")}} className="nav-menu-list">
-              Logout
-            </Link>:<></>
-          }
-          </li> 
+            {user ? (
+              <Link
+                to={"/login"}
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  navigate("/login");
+                }}
+                className="nav-menu-list"
+              >
+                Logout
+              </Link>
+            ) : (
+              <></>
+            )}
+          </li>
         </NavManu>
-        <FaBars className="menuToggleBtn" onClick={handleToggleOpen} color="#000" />
+        <FaBars
+          className="menuToggleBtn"
+          onClick={handleToggleOpen}
+          color="#000"
+        />
       </StyledHeader>
     </>
   );
