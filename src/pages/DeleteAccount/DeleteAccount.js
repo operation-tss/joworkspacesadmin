@@ -88,6 +88,11 @@ export const DeleteAccount = () => {
       );
       if (response && response?.data?.success) {
         setLoading(false);
+        alert("Your account deleted successfully");
+        setOtpEnabled(false);
+        setGenratedOtp(null);
+        setOtp(false);
+        setEmail('');
       }
       setLoading(false);
     } catch (error) {
@@ -153,6 +158,10 @@ export const DeleteAccount = () => {
     setError(err);
     return valid;
   };
+
+  if (loading) {
+    return <div>loading</div>
+  }
 
   return (
     <div
