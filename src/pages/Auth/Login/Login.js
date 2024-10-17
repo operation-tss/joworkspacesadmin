@@ -15,7 +15,11 @@ export const Login = () => {
     const response = await axios.post(getApiUri('UserLogin'),{
       UserName: username,
       Password: password,
-    });
+    }, {
+      headers: {
+          'Access-Control-Allow-Origin': 'http://203.110.90.228:86'
+      }
+  });
     console.log('-->res',response.data);
     localStorage.setItem("user", JSON.stringify(response.data));
     navigate("/");
