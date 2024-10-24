@@ -9,6 +9,7 @@ import download from "../../assets/download.png";
 import cross from "../../assets/cross.png";
 import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
+import Header from "../../components/Header/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -192,6 +193,7 @@ export const PendingPayment = () => {
   };
 
   return (
+    <><Header />
     <div
       style={{ width: "100%", alignItems: "center", justifyContent: "center" }}
     >
@@ -314,6 +316,9 @@ export const PendingPayment = () => {
               className="box"
               style={{
                 width: "30%",
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center',
                 backgroundColor: "#52a339",
                 alignSelf: "center",
                 borderRadius: 10,
@@ -478,5 +483,6 @@ export const PendingPayment = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
