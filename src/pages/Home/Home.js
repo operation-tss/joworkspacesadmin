@@ -34,9 +34,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isVisible, onModalClose] = useState(false);
-  // const upload_inVoice_selector = useSelector(uploadInvoiveSelector);
-  // console.log('upload_inVoice_selector', upload_inVoice_selector);
-  // console.log('user', user);
+  
 
   //current month and year.
   const currentDate = new Date();

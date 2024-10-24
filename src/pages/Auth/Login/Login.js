@@ -5,63 +5,62 @@ import getApiUri from "../../../utils/api.util";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
   const submit = async () => {
     try {
-    console.log(username,password);
-    const response = await axios.post(getApiUri('UserLogin'),{
-      UserName: username,
-      Password: password,
-    });
-    console.log('-->res',response.data);
-    localStorage.setItem("user", JSON.stringify(response.data));
-    navigate("/");
-          
-  } catch (error) {
-      
-  }
-  }
+      console.log(username, password);
+      const response = await axios.post(getApiUri("UserLogin"), {
+        UserName: username,
+        Password: password,
+      });
+      localStorage.setItem("user", JSON.stringify(response.data));
+      navigate("/");
+    } catch (error) {}
+  };
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
+    const user = localStorage.getItem("user");
     setTimeout(() => {
       if (user) {
-        setLoading(false)
-        navigate("/")
+        setLoading(false);
+        navigate("/");
       }
-      setLoading(false)
-    },2000)
-  },[])
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   return (
     <div
       style={{
-        // paddingLeft: "10%",
-        // paddingRight: "10%",
         backgroundImage: `url(${BgImage})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "100%",
         display: "flex",
         justifyContent: "center",
         backgroundColor: "red",
         paddingBottom: 150,
+        height: "80vh",
+        width: "100vw",
+        alignItems: "flex-start",
+        paddingTop: "5%",
       }}
     >
       <div
         style={{
           backgroundColor: "#fff",
-          alignItems: "center",
           display: "flex",
           flexDirection: "column",
-          width: 500,
+          width: "40vw",
+          height: "auto",
           marginTop: 50,
           borderRadius: 10,
           paddingTop: 50,
-          paddingBottom: 50,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "50px 20px",
         }}
       >
         <div style={{ fontWeight: "500", fontSize: 18, marginBottom: 20 }}>
