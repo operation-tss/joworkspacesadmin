@@ -1,0 +1,9 @@
+.box {
+    width: 200px;
+    background-color: #4CAF50;
+    transition: filter 0.3s ease;
+}
+
+.box:hover {
+    filter: drop-shadow(10px 10px 20px rgba(2, 79, 9, 0.5));
+}

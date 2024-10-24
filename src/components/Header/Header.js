@@ -108,10 +108,49 @@ const Header = ({ user }) => {
         </div>
 
         <NavManu isToggleOpen={isToggleOpen}>
+        <li>
+            {user ? (
+              <Link
+                to={"/"}
+                className="nav-menu-list"
+              >
+                Invoice Upload
+              </Link>
+
+            ) : (
+              <></>
+            )}
+          </li>
+          <li>
+            {user ? (
+              <Link
+                to={"/pendingPayment"}
+                className="nav-menu-list"
+              >
+                Pending Payment
+              </Link>
+
+            ) : (
+              <></>
+            )}
+          </li>
           <li>
             <Link to={"/deleteAccount"} className="nav-menu-list">
               Delete Account
             </Link>
+          </li>
+          <li>
+            {!user ? (
+              <Link
+                to={"/login"}
+                className="nav-menu-list"
+              >
+                Login
+              </Link>
+
+            ) : (
+              <></>
+            )}
           </li>
           {/* <li>
             <Link to={"/projects"} className="nav-menu-list">
@@ -125,6 +164,7 @@ const Header = ({ user }) => {
           </li>*/}
           <li>
             {user ? (
+
               <Link
                 to={"/login"}
                 onClick={() => {

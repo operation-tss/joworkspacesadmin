@@ -1,8 +1,8 @@
 .container {
     width: 100%;
-   
-
+    border-radius: 10px;
+    background-color: white;
+}
 .dropdown {
     border-radius: 10px;
-}
 }

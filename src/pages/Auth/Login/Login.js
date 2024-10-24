@@ -43,16 +43,9 @@ export const Login = () => {
   return (
     <div
       style={{
-        // paddingLeft: "10%",
-        // paddingRight: "10%",
-        backgroundImage: `url(${BgImage})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
         height: "100%",
         display: "flex",
         justifyContent: "center",
-        backgroundColor: "red",
-        paddingBottom: 150,
       }}
     >
       <div

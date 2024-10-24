@@ -160,7 +160,7 @@ export const DeleteAccount = () => {
   };
 
   if (loading) {
-    return <div>loading</div>
+    return <div style={{display: 'flex', alignItems: 'center',justifyContent: 'center', fontSize: 25,flexDirection: 'column', marginTop: 100, color: '#fff'}}>Loading...</div>
   }
 
   return (
@@ -175,9 +175,10 @@ export const DeleteAccount = () => {
         style={{
           fontFamily: "oswald",
           fontWeight: "bold",
-          color: "#236fa1",
+          color: "#3c3c3c",
           marginBottom: 10,
           marginTop: 10,
+          fontSize: 25
         }}
       >
         DeleteAccount
@@ -194,8 +195,9 @@ export const DeleteAccount = () => {
           style={{
             fontFamily: "oswald",
             fontWeight: "bold",
-            color: "#236fa1",
+            color: "#3c3c3c",
             marginBottom: 20,
+            fontSize: 20
           }}
         >
           User can delete their account from here
@@ -206,8 +208,8 @@ export const DeleteAccount = () => {
             alignItems: "start",
             flexDirection: "column",
             padding: "20px 20px",
-            backgroundColor: "#b6fcfa",
-            width: "50%",
+            backgroundColor: "#fff",
+            width: "60%",
             borderRadius: 10,
           }}
         >
@@ -216,7 +218,7 @@ export const DeleteAccount = () => {
               fontFamily: "oswald",
               fontWeight: "bold",
               color: "#236fa1",
-              marginBottom: 10,
+              marginBottom: 20,
             }}
           >
             Email
@@ -229,11 +231,11 @@ export const DeleteAccount = () => {
               borderRadius: 10,
               borderWidth: 0.5,
               //   paddingRight: 10,
-              //   paddingLeft: 10,
-              paddingTop: 8,
-              paddingBottom: 8,
-              width: "100%",
-              marginBottom: 20,
+                paddingLeft: 10,
+              paddingTop: 10,
+              paddingBottom: 10,
+              width: "96%",
+              marginBottom: 30,
             }}
           />
           <div
@@ -243,9 +245,10 @@ export const DeleteAccount = () => {
               backgroundColor: "#72f788",
               borderRadius: 10,
               //   padding: "10px 10px",
-              paddingTop: 7,
-              paddingBottom: 7,
+              paddingTop: 8,
+              paddingBottom: 8,
               marginBottom: 20,
+              cursor: 'pointer',
             }}
           >
             Send Otp
@@ -284,11 +287,12 @@ export const DeleteAccount = () => {
                 onClick={() => deleteUser()}
                 style={{
                   width: "100%",
-                  backgroundColor: "#72f788",
+                  backgroundColor: "#52a339",
                   borderRadius: 10,
                   //   padding: "10px 10px",
                   paddingTop: 7,
                   paddingBottom: 7,
+                  cursor: 'pointer',
                 }}
               >
                 Delete Account

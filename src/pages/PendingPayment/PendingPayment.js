@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import "./Home.css";
 import getApiUri from "../../utils/api.util";
+import "./PendingPayment.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Home = () => {
+export const PendingPayment = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ const Home = () => {
 
   //select month
   const [openMonth, setOpenMonth] = useState(false);
-  const [monthValue, setMonthValue] = useState(currentMonth);
+  const [monthValue, setMonthValue] = useState("");
   const [monthItems, setMonthItems] = useState([
     { label: "January", value: "01" },
     { label: "February", value: "02" },
@@ -70,7 +70,7 @@ const Home = () => {
     return items;
   };
   const [openYear, setOpenYear] = useState(false);
-  const [yearValue, setYearValue] = useState(currentYear);
+  const [yearValue, setYearValue] = useState("");
   const [yearItems, setYearItems] = useState(generateYearItems(2020, 2050));
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
@@ -111,16 +111,12 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchInvoiceList(customerValue ? customerValue : 0, monthValue, yearValue);
+    fetchPendingList();
   }, []);
 
-  const fetchInvoiceList = async (customerValue, monthValue, yearValue) => {
+  const fetchPendingList = async () => {
     try {
-      const listRes = await axios.get(
-        getApiUri(
-          `CustomeINVOICE?cusid=${customerValue}&MONTH=${monthValue}&YEAR=${yearValue}`
-        )
-      );
+      const listRes = await axios.get(getApiUri(`fetch_pending_payment`));
       if (
         listRes &&
         listRes?.data?.statuscode === 200 &&
@@ -154,72 +150,48 @@ const Home = () => {
 
   const handleUpload = async () => {
     try {
-      // const valid = validate();
-      console.log(file);
       console.log({
-        name: file.name,
-        type: file.type,
-        uri: file,
+        CusId: customerValue,
+        PaymentAmount: !monthValue || isNaN(monthValue),
+        PaymentStatus: yearValue,
       });
+      if (!monthValue) {
+        alert("Please enter amount");
+        return;
+      }
+      if (isNaN(monthValue)) {
+        alert("Amount should be a number");
+        return;
+      }
+      if (!customerValue) {
+        alert("Please select customer");
+        return;
+      }
+      if (!yearValue) {
+        alert("Please select payment status");
+        return;
+      }
       // return;
-      console.log(monthValue[0].value);
-      console.log(yearValue[0].value);
-      console.log(customerValue[0].value);
       setLoading(true);
-      const formdata = new FormData();
-      formdata.append("Files", file, file.name);
       const cust_Payment_Res = await axios.post(
-        getApiUri(
-          `CusInvoice?Id=${customerValue[0].value}&Month=${monthValue[0].value}&year=${yearValue[0].value}`
-        ),
-        formdata,
+        getApiUri(`insert_pending_payments`),
+        {
+          CusId: customerValue[0].value,
+          PaymentAmount: monthValue,
+          PaymentStatus: yearValue[0].value,
+        },
         {
           headers: {
             Accept: "application/json",
-            "Content-Type": "multipart/form-data",
           },
         }
       );
-      const trimmedResponse = cust_Payment_Res?.data.trim();
-
-      if (
-        cust_Payment_Res &&
-        trimmedResponse?.includes(
-          "Documents uploaded and paths saved successfully"
-        )
-      ) {
-        const fetch_user = await axios.get(
-          // getApiUri(
-          //   `AdminCustomeINVOICE?MONTH=${monthValue}&YEAR=${yearValue}`,
-          // ),
-
-          getApiUri(
-            `CustomeINVOICE?cusid=${
-              customerValue[0].value ? customerValue[0].value : 0
-            }&MONTH=${monthValue[0].value}&YEAR=${yearValue[0].value}`
-          )
-        );
-
-        if (
-          fetch_user &&
-          fetch_user?.data?.statuscode === 200 &&
-          fetch_user?.data?.success
-        ) {
-          // Toast.showWithGravity(
-          //   'Your document uploaded successfully!',
-          //   Toast.SHORT,
-          //   Toast.CENTER,
-          // );
-
-          setLoading(false);
-          setData(fetch_user?.data?.data);
-          // setCustomerItem([]);
-          setFile({});
-        }
-        // onModalClose(true);
-      }
+      console.log(cust_Payment_Res.data);
+      setCustomerValue("");
+      setYearValue("");
+      setMonthValue("");
       setLoading(false);
-      alert("Data saved successfully")
+      alert("Data saved successfully");
     } catch (error) {
       console.log("error", error);
       // Alert.alert('somthing went wrong please try again later......');
@@ -235,23 +207,32 @@ const Home = () => {
   };
 
   return (
-    <div style={{width: '100%', alignItems: 'center',justifyContent: 'center',}}>
+    <div
+      style={{ width: "100%", alignItems: "center", justifyContent: "center" }}
+    >
       {loading ? (
         <p>loading</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "row", columnGap: 50,padding: '10%' }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            columnGap: 50,
+            padding: "5% 10% 10% 10%",
+          }}
+        >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#f5eceb",
-              width: "80%",
+              backgroundColor: "#88bdfc",
+              width: "100%",
               padding: "5%",
               borderRadius: 20,
             }}
           >
             <p style={{ fontWeight: "700", fontSize: 20 }}>
-              Invoice Upload Form
+              Upload Pending Payment
             </p>
             <div
               style={{ display: "flex", flexDirection: "row", columnGap: 20 }}
@@ -273,9 +254,23 @@ const Home = () => {
                     color: "#236fa1",
                   }}
                 >
-                  Month
+                  Pending Amount
                 </p>
-                <Dropdown options={monthItems} setValues={setMonthValue} />
+                <input
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    columnGap: 20,
+                    borderRadius: 10,
+                    padding: "9px 0px 9px 10px",
+                    borderWidth: 0.5,
+                    // marginBottom: 20,
+                  }}
+                  onChange={(e) => setMonthValue(e.target.value)}
+                  placeholder="Enter pending amount"
+                />
               </div>
               <div
                 style={{
@@ -294,9 +289,15 @@ const Home = () => {
                     color: "#236fa1",
                   }}
                 >
-                  Year
+                  Payment Status
                 </p>
-                <Dropdown options={yearItems} setValues={setYearValue} />
+                <Dropdown
+                  options={[
+                    { label: "Paid", value: "paid" },
+                    { label: "Pending", value: "pending" },
+                  ]}
+                  setValues={setYearValue}
+                />
               </div>
             </div>
             <div
@@ -306,7 +307,7 @@ const Home = () => {
                 flexDirection: "column",
                 alignItems: "start",
                 columnGap: 20,
-                marginBottom: 20,
+                marginBottom: 40,
               }}
             >
               <p
@@ -322,31 +323,13 @@ const Home = () => {
             </div>
 
             <div
-              style={{
-                width: "100%",
-                height: 150,
-                border: "1px solid black",
-                borderRadius: 10,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 20,
-              }}
-            >
-              <input
-                type="file"
-                style={{ color: "#236fa1" }}
-                onChange={(e) => setFile(e.target.files[0])}
-              />
-            </div>
-
-            <div
               onClick={() => {
                 handleUpload();
               }}
+              className="box"
               style={{
                 width: "30%",
-                backgroundColor: "#5bbf58",
+                backgroundColor: "#52a339",
                 alignSelf: "center",
                 borderRadius: 10,
                 paddingTop: 10,
@@ -367,7 +350,7 @@ const Home = () => {
                 color: "#236fa1",
               }}
             >
-              Uploaded Receipts
+              Uploaded Pending Status
             </p>
             {console.log("data", data)}
             {data.length ? (
@@ -507,26 +490,8 @@ const Home = () => {
               <p>No data found</p>
             )}
           </div>
-          <div
-            style={{
-              position: "relative",
-              width: "50%",
-              height: 150,
-              width: 200,
-            }}
-          >
-            <Document
-              file={file}
-              onLoadSuccess={onDocumentLoadSuccess}
-              style={{ height: 150 }}
-            >
-              <Page height={150} width={300} pageNumber={1} />
-            </Document>
-          </div>
         </div>
       )}
     </div>
   );
 };
-
-export default Home;
