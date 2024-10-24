@@ -14,7 +14,7 @@ import { ProtectedRoute } from "./components/ProtectedRoutes/ProtectedRoute";
 
 export default function App() {
   const user = localStorage.getItem("user");
-  console.log("on", { user });
+
   return (
     <BrowserRouter>
       <AuthProvider>
