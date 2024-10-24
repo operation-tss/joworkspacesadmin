@@ -333,6 +333,9 @@ const Home = () => {
               }}
               style={{
                 width: "30%",
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center',
                 backgroundColor: "#5bbf58",
                 alignSelf: "center",
                 borderRadius: 10,
