@@ -160,9 +160,10 @@ const Home = () => {
         uri: file,
       });
       // return;
-      console.log(monthValue[0].value);
-      console.log(yearValue[0].value);
-      console.log(customerValue[0].value);
+      
+ 
+      
+
       setLoading(true);
       const formdata = new FormData();
       formdata.append("Files", file, file.name);

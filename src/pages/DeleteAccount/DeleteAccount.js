@@ -15,40 +15,35 @@ export const DeleteAccount = () => {
   const [otpEnabled, setOtpEnabled] = useState(false);
   const [data, setData] = useState([]);
 
+  
+  
   const handleChange = (otp) => setOtp(otp);
 
   const handleLogin = async () => {
     try {
       setLoading(true);
       const valid = await validate();
-      console.log({valid})
       if (valid) {
         const res = await axios.post(
           getApiUri(`GenerateResetOTP?txtmobileno=${email}&role_id=2`)
         );
-        console.log({res})
+ 
         if (
           res &&
           res.data &&
           res?.data?.statuscode == 200 &&
           res?.data?.success == true
         ) {
-          console.log("res?.data?.OTP", res?.data?.data);
 
           await axios.post(
             getApiUri(`sendMail?recipientEmail=${email}&otp=${res?.data?.data}`)
           );
-
-            console.log(res?.data)
-            //go to verify otp
-            // setMobileNumber('');
-            setData(res?.data)
-            setOtp("");
-            setGenratedOtp(res?.data?.data);
-            setOtpEnabled(true);
-            setOtp("");
-            setLoading(false);
-          
+          setData(res?.data);
+          setOtp("");
+          setGenratedOtp(res?.data?.data);
+          setOtpEnabled(true);
+          setOtp("");
+          setLoading(false);
         } else {
           setLoading(false);
         }
@@ -61,24 +56,6 @@ export const DeleteAccount = () => {
       setLoading(false);
     }
   };
-
-//   const handleDeleteAccount = async () => {
-//     Alert.alert(
-//       "Confirm Deletion",
-//       "Are you sure you want to delete this account? \n \n Your account will be permanently deleted. You will lose all your data, including payment details and profile information.",
-//       [
-//         {
-//           text: "Cancel",
-//           onPress: () => console.log("Cancel Pressed"),
-//           style: "cancel",
-//         },
-//         {
-//           text: "Yes",
-//           onPress: () => deleteUser(),
-//         },
-//       ]
-//     );
-//   };
 
   const deleteUser = async () => {
     try {
@@ -96,36 +73,36 @@ export const DeleteAccount = () => {
     }
   };
 
-  const verifyOtp = async () => {
-    try {
-      setLoading(true);
-      const valid = validateOtp();
-      if (valid && genratedOtp === otp) {
-        const response = await axios.post(
-          getApiUri(
-            `Verify_OTP?autoid=${autoId}&generated_otp=${genratedOtp}&entered_otp=${otp}`
-          )
-        );
-        if (
-          response &&
-          response?.data?.statuscode == 200 &&
-          response.data.msgcode != "4" &&
-          response?.data?.success
-        ) {
-          setOtpEnabled(false);
-          setEmail("");
-          setOtp("");
-          deleteUser();
-        } else {
-        }
-      } else {
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+  // const verifyOtp = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const valid = validateOtp();
+  //     if (valid && genratedOtp === otp) {
+  //       const response = await axios.post(
+  //         getApiUri(
+  //           `Verify_OTP?autoid=${autoId}&generated_otp=${genratedOtp}&entered_otp=${otp}`
+  //         )
+  //       );
+  //       if (
+  //         response &&
+  //         response?.data?.statuscode == 200 &&
+  //         response.data.msgcode != "4" &&
+  //         response?.data?.success
+  //       ) {
+  //         setOtpEnabled(false);
+  //         setEmail("");
+  //         setOtp("");
+  //         deleteUser();
+  //       } else {
+  //       }
+  //     } else {
+  //     }
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
 
   const isValidEmail = (email) => {
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;

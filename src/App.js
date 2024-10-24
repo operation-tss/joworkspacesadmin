@@ -43,6 +43,8 @@ const appRouter = createBrowserRouter([
         path: "/deleteaccount", // Changed to lowercase
         element: <DeleteAccount />,
       },
+     
+    
       {
         path: "/about", // Changed to lowercase
         element: <About />,
