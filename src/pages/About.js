@@ -1,20 +1,17 @@
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  h1 {
-    color: #fab005;
-  }
-`;
+// import { useRouteError } from "react-router-dom";
+import './About.css'; // Make sure to create this CSS file
 
 const About = () => {
+  // const error = useRouteError();
+
   return (
-    <Wrapper>
-      <h1>About</h1>
-    </Wrapper>
+    <div className="error-container">
+      <h1>Oops!!</h1>
+      <h2>Something went wrong!</h2>
+      {/* <h3>
+        {error?.status} : {error?.statusText}
+      </h3> */}
+    </div>
   );
 };
 

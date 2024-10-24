@@ -129,21 +129,6 @@ export const PendingPayment = () => {
     }
   };
 
-  const checkUser = () => {
-    const user = localStorage.getItem("user");
-    setTimeout(() => {
-      if (!user) {
-        setLoading(false);
-        navigate("/login");
-      }
-      setLoading(false);
-    }, 2000);
-  };
-
-  useEffect(() => {
-    checkUser();
-  }, []);
-
   function onDocumentLoadSuccess(numPages) {
     setNumPages(numPages);
   }

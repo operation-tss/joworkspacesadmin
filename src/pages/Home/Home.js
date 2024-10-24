@@ -9,6 +9,7 @@ import download from "../../assets/download.png";
 import cross from "../../assets/cross.png";
 import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
+import Header from "../../components/Header/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -133,21 +134,6 @@ const Home = () => {
     }
   };
 
-  const checkUser = () => {
-    const user = localStorage.getItem("user");
-    setTimeout(() => {
-      if (!user) {
-        setLoading(false);
-        navigate("/login");
-      }
-      setLoading(false);
-    }, 2000);
-  };
-
-  useEffect(() => {
-    checkUser();
-  }, []);
-
   function onDocumentLoadSuccess(numPages) {
     setNumPages(numPages);
   }
@@ -235,6 +221,7 @@ const Home = () => {
   };
 
   return (
+    <><Header />
     <div style={{width: '100%', alignItems: 'center',justifyContent: 'center',}}>
       {loading ? (
         <p>loading</p>
@@ -526,6 +513,7 @@ const Home = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

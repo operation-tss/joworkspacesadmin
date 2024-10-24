@@ -5,6 +5,7 @@ import { FaBars } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import Applogo from "../../assets/Applogo.png";
 import "./Header.css";
+import { useAuth } from "../../hooks/useAuth";
 
 const StyledHeader = styled.header`
   background-color: #e2e8b2;
@@ -69,24 +70,17 @@ const NavManu = styled.ul`
   }
 `;
 
-const Header = ({ user }) => {
+const Header = () => {
+  const { user } = useAuth();
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const handleToggleOpen = () => {
     setIsToggleOpen(!isToggleOpen);
   };
+  const { logout } = useAuth();
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setTimeout(() => {
-      if (!user) {
-        setLoading(false);
-        navigate("/login");
-      }
-      setLoading(false);
-    }, 2000);
-  }, []);
+  console.log({ user });
 
   return (
     <>
@@ -108,28 +102,20 @@ const Header = ({ user }) => {
         </div>
 
         <NavManu isToggleOpen={isToggleOpen}>
-        <li>
+          <li>
             {user ? (
-              <Link
-                to={"/"}
-                className="nav-menu-list"
-              >
+              <Link to={"/"} className="nav-menu-list">
                 Invoice Upload
               </Link>
-
             ) : (
               <></>
             )}
           </li>
           <li>
             {user ? (
-              <Link
-                to={"/pendingPayment"}
-                className="nav-menu-list"
-              >
+              <Link to={"/pendingPayment"} className="nav-menu-list">
                 Pending Payment
               </Link>
-
             ) : (
               <></>
             )}
@@ -147,7 +133,6 @@ const Header = ({ user }) => {
               >
                 Login
               </Link>
-
             ) : (
               <></>
             )}
@@ -164,15 +149,7 @@ const Header = ({ user }) => {
           </li>*/}
           <li>
             {user ? (
-
-              <Link
-                to={"/login"}
-                onClick={() => {
-                  localStorage.removeItem("user");
-                  navigate("/login");
-                }}
-                className="nav-menu-list"
-              >
+              <Link onClick={logout} className="nav-menu-list">
                 Logout
               </Link>
             ) : (

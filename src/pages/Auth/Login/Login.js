@@ -3,11 +3,14 @@ import BgImage from "../../../assets/BgImage.png";
 import axios from "axios";
 import getApiUri from "../../../utils/api.util";
 import { useNavigate } from "react-router-dom";
+import Header from "../../../components/Header/Header";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true);
+  const { login } = useAuth();
   const navigate =  useNavigate();
   const submit = async () => {
     try {
@@ -21,26 +24,15 @@ export const Login = () => {
       }
   });
     console.log('-->res',response.data);
-    localStorage.setItem("user", JSON.stringify(response.data));
-    navigate("/");
-          
+    await login(response.data);
   } catch (error) {
       
   }
   }
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    setTimeout(() => {
-      if (user) {
-        setLoading(false)
-        navigate("/")
-      }
-      setLoading(false)
-    },2000)
-  },[])
-
   return (
+    <>
+    <Header />
     <div
       style={{
         height: "100%",
@@ -161,5 +153,6 @@ export const Login = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };

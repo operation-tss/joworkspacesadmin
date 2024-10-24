@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import getApiUri from "../../utils/api.util";
 import { OtpInput } from "reactjs-otp-input";
 import "./DeleteAccount.css";
+import Header from "../../components/Header/Header";
 
 export const DeleteAccount = () => {
   // const authContext = useContext(AuthContext);
@@ -21,12 +22,12 @@ export const DeleteAccount = () => {
     try {
       setLoading(true);
       const valid = await validate();
-      console.log({valid})
+      console.log({ valid });
       if (valid) {
         const res = await axios.post(
           getApiUri(`GenerateResetOTP?txtmobileno=${email}&role_id=2`)
         );
-        console.log({res})
+        console.log({ res });
         if (
           res &&
           res.data &&
@@ -39,16 +40,15 @@ export const DeleteAccount = () => {
             getApiUri(`sendMail?recipientEmail=${email}&otp=${res?.data?.data}`)
           );
 
-            console.log(res?.data)
-            //go to verify otp
-            // setMobileNumber('');
-            setData(res?.data)
-            setOtp("");
-            setGenratedOtp(res?.data?.data);
-            setOtpEnabled(true);
-            setOtp("");
-            setLoading(false);
-          
+          console.log(res?.data);
+          //go to verify otp
+          // setMobileNumber('');
+          setData(res?.data);
+          setOtp("");
+          setGenratedOtp(res?.data?.data);
+          setOtpEnabled(true);
+          setOtp("");
+          setLoading(false);
         } else {
           setLoading(false);
         }
@@ -62,23 +62,23 @@ export const DeleteAccount = () => {
     }
   };
 
-//   const handleDeleteAccount = async () => {
-//     Alert.alert(
-//       "Confirm Deletion",
-//       "Are you sure you want to delete this account? \n \n Your account will be permanently deleted. You will lose all your data, including payment details and profile information.",
-//       [
-//         {
-//           text: "Cancel",
-//           onPress: () => console.log("Cancel Pressed"),
-//           style: "cancel",
-//         },
-//         {
-//           text: "Yes",
-//           onPress: () => deleteUser(),
-//         },
-//       ]
-//     );
-//   };
+  //   const handleDeleteAccount = async () => {
+  //     Alert.alert(
+  //       "Confirm Deletion",
+  //       "Are you sure you want to delete this account? \n \n Your account will be permanently deleted. You will lose all your data, including payment details and profile information.",
+  //       [
+  //         {
+  //           text: "Cancel",
+  //           onPress: () => console.log("Cancel Pressed"),
+  //           style: "cancel",
+  //         },
+  //         {
+  //           text: "Yes",
+  //           onPress: () => deleteUser(),
+  //         },
+  //       ]
+  //     );
+  //   };
 
   const deleteUser = async () => {
     try {
@@ -92,7 +92,7 @@ export const DeleteAccount = () => {
         setOtpEnabled(false);
         setGenratedOtp(null);
         setOtp(false);
-        setEmail('');
+        setEmail("");
       }
       setLoading(false);
     } catch (error) {
@@ -160,35 +160,33 @@ export const DeleteAccount = () => {
   };
 
   if (loading) {
-    return <div style={{display: 'flex', alignItems: 'center',justifyContent: 'center', fontSize: 25,flexDirection: 'column', marginTop: 100, color: '#fff'}}>Loading...</div>
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "oswald",
-          fontWeight: "bold",
-          color: "#3c3c3c",
-          marginBottom: 10,
-          marginTop: 10,
-          fontSize: 25
-        }}
-      >
-        DeleteAccount
-      </div>
+    return (
+      <><Header />
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          width: "50%",
+          justifyContent: "center",
+          fontSize: 25,
+          flexDirection: "column",
+          marginTop: 100,
+          color: "#fff",
+        }}
+      >
+        Loading...
+      </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Header />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
         }}
       >
         <div
@@ -196,113 +194,142 @@ export const DeleteAccount = () => {
             fontFamily: "oswald",
             fontWeight: "bold",
             color: "#3c3c3c",
-            marginBottom: 20,
-            fontSize: 20
+            marginBottom: 10,
+            marginTop: 10,
+            fontSize: 25,
           }}
         >
-          User can delete their account from here
+          DeleteAccount
         </div>
         <div
           style={{
             display: "flex",
-            alignItems: "start",
             flexDirection: "column",
-            padding: "20px 20px",
-            backgroundColor: "#fff",
-            width: "60%",
-            borderRadius: 10,
+            alignItems: "center",
+            width: "50%",
           }}
         >
           <div
             style={{
               fontFamily: "oswald",
               fontWeight: "bold",
-              color: "#236fa1",
+              color: "#3c3c3c",
               marginBottom: 20,
+              fontSize: 20,
             }}
           >
-            Email
+            User can delete their account from here
           </div>
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="Enter your email"
-            style={{
-              borderRadius: 10,
-              borderWidth: 0.5,
-              //   paddingRight: 10,
-                paddingLeft: 10,
-              paddingTop: 10,
-              paddingBottom: 10,
-              width: "96%",
-              marginBottom: 30,
-            }}
-          />
           <div
-            onClick={() => handleLogin()}
             style={{
-              width: "100%",
-              backgroundColor: "#72f788",
+              display: "flex",
+              alignItems: "start",
+              flexDirection: "column",
+              padding: "20px 20px",
+              backgroundColor: "#fff",
+              width: "60%",
               borderRadius: 10,
-              //   padding: "10px 10px",
-              paddingTop: 8,
-              paddingBottom: 8,
-              marginBottom: 20,
-              cursor: 'pointer',
             }}
           >
-            Send Otp
+            <div
+              style={{
+                fontFamily: "oswald",
+                fontWeight: "bold",
+                color: "#236fa1",
+                marginBottom: 20,
+              }}
+            >
+              Email
+            </div>
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="Enter your email"
+              style={{
+                borderRadius: 10,
+                borderWidth: 0.5,
+                //   paddingRight: 10,
+                paddingLeft: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                width: "96%",
+                marginBottom: 30,
+              }}
+            />
+            <div
+              onClick={() => handleLogin()}
+              style={{
+                display: 'flex',
+                justifyContent:'center',
+                alignItems: 'center',
+                width: "100%",
+                fontWeight: '500',
+                backgroundColor: "#72f788",
+                borderRadius: 10,
+                //   padding: "10px 10px",
+                paddingTop: 8,
+                paddingBottom: 8,
+                marginBottom: 20,
+                cursor: "pointer",
+              }}
+            >
+              Send Otp
+            </div>
+            {otpEnabled ? (
+              <>
+                <div
+                  style={{
+                    fontFamily: "oswald",
+                    fontWeight: "bold",
+                    color: "#236fa1",
+                    marginBottom: 20,
+                  }}
+                >
+                  Enter otp to delete account
+                </div>
+                <div
+                  style={{
+                    fontFamily: "oswald",
+                    fontWeight: "bold",
+                    color: "#236fa1",
+                    marginBottom: 10,
+                  }}
+                >
+                  OTP
+                </div>
+                <OtpInput
+                  value={otp}
+                  onChange={handleChange}
+                  numInputs={6}
+                  separator={<span>-</span>}
+                  inputStyle={{ marginBottom: 20 }}
+                  containerStyle={{ width: "100%" }}
+                />
+                <div
+                  onClick={() => deleteUser()}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#52a339",
+                    borderRadius: 10,
+                    display: 'flex',
+                    justifyContent:'center',
+                    alignItems: 'center',
+                    fontWeight: '500',
+                    //   padding: "10px 10px",
+                    paddingTop: 7,
+                    paddingBottom: 7,
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete Account
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
-          {otpEnabled ? (
-            <>
-              <div
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                  marginBottom: 20,
-                }}
-              >
-                Enter otp to delete account
-              </div>
-              <div
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                  marginBottom: 10,
-                }}
-              >
-                OTP
-              </div>
-              <OtpInput
-                value={otp}
-                onChange={handleChange}
-                numInputs={6}
-                separator={<span>-</span>}
-                inputStyle={{ marginBottom: 20 }}
-                containerStyle={{ width: "100%" }}
-              />
-              <div
-                onClick={() => deleteUser()}
-                style={{
-                  width: "100%",
-                  backgroundColor: "#52a339",
-                  borderRadius: 10,
-                  //   padding: "10px 10px",
-                  paddingTop: 7,
-                  paddingBottom: 7,
-                  cursor: 'pointer',
-                }}
-              >
-                Delete Account
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
