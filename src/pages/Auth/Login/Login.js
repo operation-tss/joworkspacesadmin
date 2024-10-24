@@ -35,9 +35,11 @@ export const Login = () => {
     <Header />
     <div
       style={{
-        height: "100%",
+        height: "80vh",
         display: "flex",
         justifyContent: "center",
+        alignItems: 'center',
+        
       }}
     >
       <div
@@ -47,7 +49,7 @@ export const Login = () => {
           display: "flex",
           flexDirection: "column",
           width: 500,
-          marginTop: 50,
+          // marginTop: 50,
           borderRadius: 10,
           paddingTop: 50,
           paddingBottom: 50,

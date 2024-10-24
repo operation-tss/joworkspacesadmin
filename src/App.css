@@ -2,10 +2,14 @@
   text-align: center;
 }
 
+html {
+  min-height: 100%;
+}
+
 body {
   background-image: url('./assets/BgImage.png'); /* Replace with your image path */
-  background-size: auto; /* Adjust as needed */
-  background-repeat: repeat-y; /* Adjust as needed */
+  background-size: cover; /* Adjust as needed */
+  background-repeat: no-repeat; /* Adjust as needed */
 }
 
 .App-logo {
