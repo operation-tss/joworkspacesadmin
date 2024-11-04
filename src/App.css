@@ -6,11 +6,11 @@ html {
   min-height: 100%;
 }
 
-body {
-  background-image: url('./assets/BgImage.png'); /* Replace with your image path */
-  background-size: cover; /* Adjust as needed */
-  background-repeat: no-repeat; /* Adjust as needed */
-}
+/* body {
+  background-image: url('./assets/BgImage.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+} */
 
 .App-logo {
   height: 40vmin;

@@ -212,7 +212,7 @@ export const PendingPayment = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#88bdfc",
+              backgroundColor: "#ccfcf9",
               width: "100%",
               padding: "5%",
               borderRadius: 20,
@@ -292,7 +292,7 @@ export const PendingPayment = () => {
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "start",
+                alignItems: "start",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
                 columnGap: 20,
                 marginBottom: 40,
               }}
@@ -319,7 +319,7 @@ export const PendingPayment = () => {
                 display: 'flex',
                 justifyContent:'center',
                 alignItems: 'center',
-                backgroundColor: "#52a339",
+                backgroundColor: "#5bbf58",
                 alignSelf: "center",
                 borderRadius: 10,
                 paddingTop: 10,
@@ -342,7 +342,6 @@ export const PendingPayment = () => {
             >
               Uploaded Pending Status
             </p>
-            {console.log("data", data)}
             {data.length ? (
               data.map((item) => {
                 const invoicedata = item;

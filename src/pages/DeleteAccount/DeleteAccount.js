@@ -226,7 +226,7 @@ export const DeleteAccount = () => {
               alignItems: "start",
               flexDirection: "column",
               padding: "20px 20px",
-              backgroundColor: "#fff",
+              backgroundColor: "#ccfcf9",
               width: "60%",
               borderRadius: 10,
             }}
@@ -264,7 +264,8 @@ export const DeleteAccount = () => {
                 alignItems: 'center',
                 width: "100%",
                 fontWeight: '500',
-                backgroundColor: "#72f788",
+                backgroundColor: "#5bbf58",
+                color: '#fff',
                 borderRadius: 10,
                 //   padding: "10px 10px",
                 paddingTop: 8,
@@ -309,12 +310,13 @@ export const DeleteAccount = () => {
                   onClick={() => deleteUser()}
                   style={{
                     width: "100%",
-                    backgroundColor: "#52a339",
+                    backgroundColor: "#5bbf58",
                     borderRadius: 10,
                     display: 'flex',
                     justifyContent:'center',
                     alignItems: 'center',
                     fontWeight: '500',
+                    color: '#fff',
                     //   padding: "10px 10px",
                     paddingTop: 7,
                     paddingBottom: 7,
