@@ -1,0 +1,54 @@
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: linear-gradient(to bottom,#f3e2f8,#f3e2f8);
+    border: 0.5px solid #3c3c3c;
+    align-self: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 10px 10px 30px 20px;
+    border-radius: 5px;
+    width: 55%;
+}
+
+.registration-label {
+    font-weight: 700;
+    font-size: 14px;
+    color: #3c3c3c;
+    width: 100%;
+}
+
+.registration-input {
+    border-color: #3c3c3c; /* Dark gray border color */
+    border-width: 0.5px;
+    font-size: 15px;
+    font-family: 'Lato-Bold'; /* Use the same font-family from React Native styles */
+    color: #333333; /* Primary dark text color */
+    /* width: 100%; */
+    border-radius: 5px;
+    padding: 7px 6px 7px 6px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.register-button {
+    background-color: #5ac6d4;
+    padding: 7px 7px 7px 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    width: 40%;
+    font-weight: 800;
+    color: #3c3c3c;
+}
+
+.picker {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    background-color: #58b2be;
+    width: 50%;
+}

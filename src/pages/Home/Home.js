@@ -11,7 +11,9 @@ import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
 import Header from "../../components/Header/Header";
 import "react-pdf/dist/esm/Page/TextLayer.css";
-
+console.log(
+  new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString()
+);
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
@@ -59,7 +61,7 @@ const Home = () => {
 
   //select month
   const [openMonth, setOpenMonth] = useState(false);
-  const [monthValue, setMonthValue] = useState(currentMonth);
+  const [monthValue, setMonthValue] = useState("");
   const [monthItems, setMonthItems] = useState([
     { label: "January", value: "01" },
     { label: "February", value: "02" },
@@ -84,7 +86,7 @@ const Home = () => {
     return items;
   };
   const [openYear, setOpenYear] = useState(false);
-  const [yearValue, setYearValue] = useState(currentYear);
+  const [yearValue, setYearValue] = useState("");
   const [yearItems, setYearItems] = useState(generateYearItems(2020, 2050));
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
@@ -126,16 +128,29 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchInvoiceList(customerValue ? customerValue : 0, monthValue, yearValue);
-  }, []);
+    if (customerValue && monthValue && yearValue) {
+      fetchInvoiceList(
+        customerValue[0].value,
+        monthValue[0].value,
+        yearValue[0].value
+      );
+    }
+  }, [customerValue, monthValue, yearValue]);
 
-  const fetchInvoiceList = async (customerValue, monthValue, yearValue) => {
+  const fetchInvoiceList = async (customerValuee, monthValuee, yearValuee) => {
+    console.log("rarnanr");
     try {
-      const listRes = await axios.get(
+      console.log(
         getApiUri(
-          `CustomeINVOICE?cusid=${customerValue}&MONTH=${monthValue}&YEAR=${yearValue}`
+          `CustomeINVOICE?cusid=${customerValuee}&MONTH=${monthValuee}&YEAR=${yearValuee}`
         )
       );
+      const listRes = await axios.get(
+        getApiUri(
+          `CustomeINVOICE?cusid=${customerValuee}&MONTH=${monthValuee}&YEAR=${yearValuee}`
+        )
+      );
+      console.log({ listRes });
       if (
         listRes &&
         listRes?.data?.statuscode === 200 &&
@@ -235,7 +250,7 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <Header />
       <div
         style={{
@@ -259,16 +274,42 @@ const Home = () => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "#ccfcf9",
                 width: "auto",
-                padding: "5%",
-                borderRadius: 20,
+                padding: "2% 5% 5% 5%",
+                backgroundColor: "#eee9f0",
+                borderRadius: 10,
+                border: "0.5px solid black",
                 flex: 1,
               }}
             >
               <p style={{ fontWeight: "700", fontSize: 20 }}>
                 Invoice Upload Form
               </p>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  columnGap: 20,
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "oswald",
+                    fontWeight: "bold",
+                    color: "#236fa1",
+                  }}
+                >
+                  Customer
+                </p>
+                <Dropdown
+                  options={customerItem}
+                  setValues={(values) => {
+                    setCustomerValue(values);
+                  }}
+                />
+              </div>
               <div
                 style={{ display: "flex", flexDirection: "row", columnGap: 20 }}
               >
@@ -279,7 +320,7 @@ const Home = () => {
                     flexDirection: "column",
                     alignItems: "start",
                     columnGap: 20,
-                    // marginBottom: 20,
+                    marginBottom: 20,
                   }}
                 >
                   <p
@@ -315,34 +356,13 @@ const Home = () => {
                   <Dropdown options={yearItems} setValues={setYearValue} />
                 </div>
               </div>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "start",
-                  columnGap: 20,
-                  marginBottom: 20,
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "oswald",
-                    fontWeight: "bold",
-                    color: "#236fa1",
-                  }}
-                >
-                  Customer
-                </p>
-                <Dropdown options={customerItem} setValues={setCustomerValue} />
-              </div>
 
               <div
                 style={{
                   width: "100%",
                   height: 150,
                   border: "1px solid black",
-                  borderRadius: 10,
+                  borderRadius: 5,
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
@@ -365,7 +385,7 @@ const Home = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  backgroundColor: "#5bbf58",
+                  backgroundColor: "#25a6b8",
                   alignSelf: "center",
                   borderRadius: 10,
                   paddingTop: 10,
@@ -386,7 +406,7 @@ const Home = () => {
                   color: "#236fa1",
                 }}
               >
-                Uploaded Receipts
+                Uploaded Invoices
               </p>
               {data.length ? (
                 data.map((item) => {
@@ -545,10 +565,12 @@ const Home = () => {
                 flex: 1,
               }}
             >
-              {console.log('===-->',{pageNumber, numPages})}
+              {console.log("===-->", { pageNumber, numPages })}
               <Document
                 file={file}
-                onLoadSuccess={({ numPages }) => onDocumentLoadSuccess(numPages)}
+                onLoadSuccess={({ numPages }) =>
+                  onDocumentLoadSuccess(numPages)
+                }
               >
                 <div
                   style={{
@@ -557,11 +579,11 @@ const Home = () => {
                     justifyContent: "space-between",
                     paddingLeft: "10%",
                     paddingRight: "10%",
-                    marginTop: 20
+                    marginTop: 20,
                   }}
                 >
                   <div
-                  style={{fontWeight: 500}}
+                    style={{ fontWeight: 500 }}
                     onClick={() => {
                       if (pageNumber > 1) {
                         setPageNumber(pageNumber - 1);
@@ -570,20 +592,22 @@ const Home = () => {
                   >
                     previous
                   </div>
-                  <div>{pageNumber} of {numPages}</div>
+                  <div>
+                    {pageNumber} of {numPages}
+                  </div>
                   <div
-                   style={{fontWeight: 500}}
+                    style={{ fontWeight: 500 }}
                     onClick={() => {
                       console.log(numPages, pageNumber);
                       if (pageNumber < numPages) {
-                        setPageNumber(page =>pageNumber + 1);
+                        setPageNumber((page) => pageNumber + 1);
                       }
                     }}
                   >
                     next
                   </div>
                 </div>
-                
+
                 <Page
                   height={130}
                   width={width > 800 ? width / 2.5 : width / 1.3}
@@ -595,7 +619,7 @@ const Home = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

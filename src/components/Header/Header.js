@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
-import logo from "../../assets/logo.png";
 import Applogo from "../../assets/Applogo.png";
 import "./Header.css";
 import { useAuth } from "../../hooks/useAuth";
 
 const StyledHeader = styled.header`
-  background-color: #e2e8b2;
+  background-image: linear-gradient(to right, #409fed, #e0a1f7);
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid lightgray;
+  justify-content: center;
   .nav_logo {
     padding: 0 12px;
     .nav-logo-link {
@@ -48,11 +46,6 @@ const NavManu = styled.ul`
   list-style: none;
   display: flex;
   li {
-    &:hover {
-      cursor: pointer;
-      background: #44a8f4;
-      border-radius: 4px;
-    }
   }
   .nav-menu-list {
     text-decoration: none;
@@ -63,19 +56,16 @@ const NavManu = styled.ul`
     font-weight: 500;
   }
   @media screen and (max-width: 768px) {
-    display: ${(props) => (props.isToggleOpen ? "block" : "none")};
-    flex-direction: column;
+    display: ${(props) => (props.isToggleOpen ? "block" : "block")};
+    flex-direction: row;
     align-items: center;
     width: 100%;
-    margin-top: 5px;
   }
 `;
 
-const Header = () => {
+const Header = ({text= 'Admin Panel'}) => {
   const { user } = useAuth();
   const [isToggleOpen, setIsToggleOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const handleToggleOpen = () => {
     setIsToggleOpen(!isToggleOpen);
   };
@@ -86,83 +76,30 @@ const Header = () => {
   return (
     <>
       <StyledHeader>
-        <div className="nav_logo">
-          <Link to={"/"} className="nav-logo-link">
-            <img src={Applogo} className="logo" alt="" />
-            <p
-              style={{
-                textAlign: "center",
-                color: "#000",
-                fontWeight: "500",
-                fontSize: 16,
-              }}
-            >
-              workspaces.com
-            </p>
-          </Link>
-        </div>
-
-        <NavManu isToggleOpen={isToggleOpen}>
-          <li>
+        <NavManu>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 23,
+              color: "#262626",
+              fontWeight: "bolder",
+              marginLeft: -40
+            }}
+          >
+            {text}
+          </div>
+          <li style={{ paddingTop: 10, paddingBottom: 10 }}>
             {user ? (
               <Link to={"/"} className="nav-menu-list">
-                Invoice Upload
-              </Link>
-            ) : (
-              <></>
-            )}
-          </li>
-          <li>
-            {user ? (
-              <Link to={"/pendingPayment"} className="nav-menu-list">
-                Pending Payment
-              </Link>
-            ) : (
-              <></>
-            )}
-          </li>
-          <li>
-            <Link to={"/deleteAccount"} className="nav-menu-list">
-              Delete Account
-            </Link>
-          </li>
-          <li>
-            {!user ? (
-              <Link
-                to={"/login"}
-                className="nav-menu-list"
-              >
-                Login
-              </Link>
-            ) : (
-              <></>
-            )}
-          </li>
-          {/* <li>
-            <Link to={"/projects"} className="nav-menu-list">
-              Projects
-            </Link>
-          </li>
-          <li>
-            <Link to={"/til"} className="nav-menu-list">
-              TIL
-            </Link>
-          </li>*/}
-          <li>
-            {user ? (
-              <Link onClick={logout} className="nav-menu-list">
-                Logout
+                {/* Invoice Upload */}
               </Link>
             ) : (
               <></>
             )}
           </li>
         </NavManu>
-        <FaBars
-          className="menuToggleBtn"
-          onClick={handleToggleOpen}
-          color="#000"
-        />
       </StyledHeader>
     </>
   );

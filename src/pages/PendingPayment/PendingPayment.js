@@ -117,13 +117,16 @@ export const PendingPayment = () => {
 
   const fetchPendingList = async () => {
     try {
-      const listRes = await axios.get(getApiUri(`fetch_pending_payment`));
+      const listRes = await axios.get(getApiUri(`fetch_pending_payment?customer_id=2`));
+      const listRes1 = await axios.get(getApiUri(`fetch_pending_payment?customer_id=1`));
+      const listRes2 = await axios.get(getApiUri(`fetch_pending_payment?customer_id=5`));
+      console.log(listRes)
       if (
         listRes &&
-        listRes?.data?.statuscode === 200 &&
-        listRes?.data?.success
+        listRes?.data?.Status === 200
       ) {
-        setData(listRes?.data?.data);
+        console.log('listres',[...listRes?.data?.data?.Table,...listRes1?.data?.data?.Table])
+        setData([...listRes?.data?.data?.Table,...listRes1?.data?.data?.Table, ...listRes2?.data?.data?.Table]);
       }
     } catch (error) {
       console.log("error", error);
@@ -177,6 +180,7 @@ export const PendingPayment = () => {
       setYearValue("");
       setMonthValue("");
       setLoading(false);
+      fetchPendingList();
       alert("Data saved successfully");
     } catch (error) {
       console.log("error", error);
@@ -193,7 +197,7 @@ export const PendingPayment = () => {
   };
 
   return (
-    <><Header />
+    <div style={{display: 'flex', flexDirection: 'column',flex: 1}}><Header />
     <div
       style={{ width: "100%", alignItems: "center", justifyContent: "center" }}
     >
@@ -205,17 +209,18 @@ export const PendingPayment = () => {
             display: "flex",
             flexDirection: "row",
             columnGap: 50,
-            padding: "5% 10% 10% 10%",
+            padding: "5% 15% 10% 15%",
           }}
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              backgroundColor: "#ccfcf9",
               width: "100%",
               padding: "5%",
-              borderRadius: 20,
+              backgroundColor: '#eee9f0',
+              borderRadius: 10,
+              border: '0.5px solid black',
             }}
           >
             <p style={{ fontWeight: "700", fontSize: 20 }}>
@@ -319,7 +324,7 @@ export const PendingPayment = () => {
                 display: 'flex',
                 justifyContent:'center',
                 alignItems: 'center',
-                backgroundColor: "#5bbf58",
+                backgroundColor: "#25a6b8",
                 alignSelf: "center",
                 borderRadius: 10,
                 paddingTop: 10,
@@ -342,6 +347,7 @@ export const PendingPayment = () => {
             >
               Uploaded Pending Status
             </p>
+            {console.log('--->>>',{data})}
             {data.length ? (
               data.map((item) => {
                 const invoicedata = item;
@@ -367,20 +373,19 @@ export const PendingPayment = () => {
                       <div
                         style={{
                           width: "45%",
-                          fontSize: 18,
+                          fontSize: 15,
                           fontFamily: "oswald",
                           fontWeight: "bold",
                           color: "#236fa1",
                           textAlign: "start",
                         }}
                       >
-                        Name:
+                        Customer Name:
                       </div>
                       <div
                         style={{ width: "55%", fontSize: 18, textAlign: "end" }}
                       >
-                        {console.log(invoicedata?.mst_customer_name)}
-                        {invoicedata?.mst_customer_name}
+                        {customerItem.find(el => el.value === invoicedata?.mst_cus_pending_payment_customer_id).label }
                       </div>
                     </div>
 
@@ -390,25 +395,25 @@ export const PendingPayment = () => {
                         justifyContent: "space-between",
                         width: "100%",
                         flexDirection: "row",
+                        paddingTop: 6,
                       }}
                     >
                       <div
                         style={{
                           width: "45%",
-                          fontSize: 18,
+                          fontSize: 15,
                           fontFamily: "oswald",
                           fontWeight: "bold",
                           color: "#236fa1",
                           textAlign: "start",
                         }}
                       >
-                        Date :
+                        Date Uploaded:
                       </div>
                       <div
                         style={{ width: "55%", fontSize: 15, textAlign: "end" }}
                       >
-                        {invoicedata?.MST_UPLOAD_INVOICE_MONTHS}
-                        {invoicedata?.MST_UPLOAD_INVOICE_YEAR}
+                        {invoicedata?.mst_cus_pending_payment_updatedOnDate}
                       </div>
                     </div>
 
@@ -452,16 +457,49 @@ export const PendingPayment = () => {
                           textAlign: "start",
                         }}
                       >
-                        Download :
+                        Pending Amount :
                       </div>
-                      <a
-                        download={true}
-                        href={item?.MST_UPLOAD_INVOICE_PATH}
-                        target="_blank"
-                        style={{ alignSelf: "flex-end" }}
+                      <div
+                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
                       >
-                        <img src={download} style={{ width: 30, height: 30 }} />
-                      </a>
+                        {invoicedata?.mst_cus_pending_payment_amount}
+                      </div>
+                      {/* <Icon
+              onPress={() =>
+                downloadFunction(invoicedata?.MST_UPLOAD_INVOICE_PATH)
+              }
+              name="download"
+              size={30}
+              style={{color: COLORS.GREEN, marginLeft: 10}}
+            /> */}
+                      {/* <div style={{ backgroundColor: "blue" }}></div> */}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingTop: 6,
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "45%",
+                          fontSize: 15,
+                          fontFamily: "oswald",
+                          fontWeight: "bold",
+                          color: "#236fa1",
+                          textAlign: "start",
+                        }}
+                      >
+                        Status :
+                      </div>
+                      <div
+                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
+                      >
+                        {invoicedata?.mst_cus_pending_payment_status}
+                      </div>
                       {/* <Icon
               onPress={() =>
                 downloadFunction(invoicedata?.MST_UPLOAD_INVOICE_PATH)
@@ -482,6 +520,6 @@ export const PendingPayment = () => {
         </div>
       )}
     </div>
-    </>
+    </div>
   );
 };

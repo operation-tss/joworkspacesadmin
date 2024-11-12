@@ -34,14 +34,12 @@ export const Login = () => {
   };
 
   return (
-    <>
-      <Header />
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <div
         className="logincontainer"
         style={{
           height: "100vh",
           display: "flex",
-          backgroundColor: 'red',
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -54,12 +52,13 @@ export const Login = () => {
             flexDirection: "column",
             width: 500,
             // marginTop: 50,
+            boxShadow: '0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 8px 24px 0 rgba(0, 0, 0, 0.39)',
             borderRadius: 10,
             paddingTop: 50,
             paddingBottom: 50,
           }}
         >
-          <div style={{ fontWeight: "500", fontSize: 18, marginBottom: 20 }}>
+          <div style={{ fontWeight: "bolder", fontSize: 22, marginBottom: 20,color: '#3c3c3c' }}>
             Admin Login
           </div>
           <div
@@ -159,6 +158,6 @@ export const Login = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -180,8 +180,8 @@ export const DeleteAccount = () => {
   }
 
   return (
-    <>
-      <Header />
+    <div style={{display: 'flex', flexDirection: 'column',flex: 1, height: '100vh'}}>
+      <Header text='Delete Account' />
       <div
         style={{
           display: "flex",
@@ -264,7 +264,7 @@ export const DeleteAccount = () => {
                 alignItems: 'center',
                 width: "100%",
                 fontWeight: '500',
-                backgroundColor: "#5bbf58",
+                backgroundColor: "#25a6b8",
                 color: '#fff',
                 borderRadius: 10,
                 //   padding: "10px 10px",
@@ -310,7 +310,7 @@ export const DeleteAccount = () => {
                   onClick={() => deleteUser()}
                   style={{
                     width: "100%",
-                    backgroundColor: "#5bbf58",
+                    backgroundColor: "#25a6b8",
                     borderRadius: 10,
                     display: 'flex',
                     justifyContent:'center',
@@ -332,6 +332,6 @@ export const DeleteAccount = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
