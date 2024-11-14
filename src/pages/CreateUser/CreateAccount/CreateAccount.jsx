@@ -4,7 +4,7 @@ import getApiUri from "../../../utils/api.util";
 import logo from "../../../assets/logo.png";
 import { OtpInput } from "reactjs-otp-input";
 
-const CreateAccount = ({email,setEmail, setVisible}) => {
+const CreateAccount = ({ email, setEmail, setVisible }) => {
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
@@ -84,12 +84,12 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
             //   }),
             // );
             // authContext.signIn();
-            setVisible('CREATE_PASSWORD')
+            setVisible("CREATE_PASSWORD");
             setLoading(false);
           }
           if (res.data.msgcode === "3") {
             // go to for registration
-            setVisible('REGISTRATION')
+            setVisible("REGISTRATION");
             setLoading(false);
             // localStorage.clear();
             // localStorage.setItem(
@@ -166,11 +166,11 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
           //     msgcode: response.data.msgcode,
           //   }),
           // );
-          console.log('res---',response.data)
+          console.log("res---", response.data);
           // return;
-          setVisible('CREATE_PASSWORD')
+          setVisible("CREATE_PASSWORD");
           setOtpEnabled(false);
-          setEmail("");
+          // setEmail("");
           setOtp("");
           // authContext.signIn();
         } else {
@@ -250,8 +250,8 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
             paddingTop: 20,
             width: "40%",
             alignSelf: "center",
-            backgroundImage: 'linear-gradient(to bottom,#faf9f9,#f3e2f8)',
-            border: '0.5px solid #3c3c3c',
+            backgroundImage: "linear-gradient(to bottom,#faf9f9,#f3e2f8)",
+            border: "0.5px solid #3c3c3c",
             display: "flex",
             flexDirection: "column",
             borderRadius: 5,
@@ -326,13 +326,20 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
               </div>
             </>
           ) : (
-            <div style={{display: 'flex',justifyContent: 'center',flexDirection:'column',alignItems:'center'}}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <div
                 style={{
                   color: "#3c3c3c",
                   fontWeight: "500",
                   fontSize: 15,
-                  marginBottom:20
+                  marginBottom: 20,
                 }}
               >
                 {" "}
@@ -344,7 +351,12 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
                 numInputs={6}
                 separator={<span>-</span>}
                 inputStyle={{ marginBottom: 20 }}
-                containerStyle={{ width: "100%", display:'flex',flexDirection:'row',justifyContent:'center' }}
+                containerStyle={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
               />
               {/* <OTPInputView
                       style={{width: '100%', height: 80, alignSelf: 'center'}}
@@ -401,7 +413,7 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
                   fontSize: 16,
                   fontWeight: "600",
                   textDecorationLine: "underline",
-                  marginBottom:20
+                  marginBottom: 20,
                 }}
               >
                 Resend Otp
@@ -424,20 +436,10 @@ const CreateAccount = ({email,setEmail, setVisible}) => {
             }}
           >
             <div
-              onClick={
-                !otpEnabled && email?.length < 10
-                  ? true
-                  : otpEnabled && otp?.length < 6
-                  ? true
-                  : false
-                  ? () => {}
-                  : () => {
-                      !otpEnabled ? handleLogin() : verifyOtp();
-                    }
-              }
+              onClick={()=>loading? ()=>{} : !otpEnabled ? handleLogin() : verifyOtp()}
               style={{ alignSelf: "center", fontWeight: "bold", fontSize: 16 }}
             >
-              {!otpEnabled ? "Continue" : "Verify OTP"}
+              {loading? 'loading...' : !otpEnabled ? "Continue" : "Verify OTP"}
             </div>
           </div>
         </div>

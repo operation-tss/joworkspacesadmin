@@ -111,22 +111,19 @@ export const PendingPayment = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPendingList();
-  }, []);
+  // useEffect(() => {
+  //   fetchPendingList();
+  // }, []);
 
-  const fetchPendingList = async () => {
+  const fetchPendingList = async (id) => {
     try {
-      const listRes = await axios.get(getApiUri(`fetch_pending_payment?customer_id=2`));
-      const listRes1 = await axios.get(getApiUri(`fetch_pending_payment?customer_id=1`));
-      const listRes2 = await axios.get(getApiUri(`fetch_pending_payment?customer_id=5`));
+      const listRes = await axios.get(getApiUri(`fetch_pending_payment?customer_id=${id}`));
       console.log(listRes)
       if (
         listRes &&
         listRes?.data?.Status === 200
       ) {
-        console.log('listres',[...listRes?.data?.data?.Table,...listRes1?.data?.data?.Table])
-        setData([...listRes?.data?.data?.Table,...listRes1?.data?.data?.Table, ...listRes2?.data?.data?.Table]);
+        setData([...listRes?.data?.data?.Table]);
       }
     } catch (error) {
       console.log("error", error);
@@ -227,7 +224,27 @@ export const PendingPayment = () => {
               Upload Pending Payment
             </p>
             <div
-              style={{ display: "flex", flexDirection: "row", columnGap: 20 }}
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                columnGap: 20,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "oswald",
+                  fontWeight: "bold",
+                  color: "#236fa1",
+                }}
+              >
+                Customer
+              </p>
+              <Dropdown options={customerItem} setValues={(values)=> {fetchPendingList(values[0].value);setCustomerValue(values)}} />
+            </div>
+            <div
+              style={{ display: "flex", flexDirection: "row", columnGap: 20,marginBottom: 40, }}
             >
               <div
                 style={{
@@ -291,27 +308,6 @@ export const PendingPayment = () => {
                   setValues={setYearValue}
                 />
               </div>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "start",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-                columnGap: 20,
-                marginBottom: 40,
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                }}
-              >
-                Customer
-              </p>
-              <Dropdown options={customerItem} setValues={setCustomerValue} />
             </div>
 
             <div

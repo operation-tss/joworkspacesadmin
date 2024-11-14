@@ -73,16 +73,33 @@ const Registration = ({ email, setEmail, setVisible }) => {
       valid = false;
       err.panNo = "Please enter valid  Pan No.";
     }
-    if (Object.keys(gst).length === 0) {
+    console.log("gst?.name", gst?.name);
+    // console.log(Object.keys(gst))
+    if (!gst?.name) {
+      valid = false;
       err.gst = true;
+      err.gstErrorText = "Please select your gst.."
     }
-    if (Object.keys(panCard).length === 0) {
+    if(gst?.size > 1015 * 1024) {
+      valid = false;
+      err.gst = true;
+      err.gstErrorText = "Please select file less than 1mb"
+    }
+    console.log("panCard?.name", panCard?.name);
+    if (!panCard?.name) {
+      valid = false;
       err.panCard = true;
+      err.panCardErrorText = "Please select your panCard.."
+    }
+    if(panCard?.size > 1015 * 1024) {
+      valid = false;
+      err.panCard = true;
+      err.panCardErrorText = "Please select file less than 1mb"
     }
     // if (Object.keys(companyLogo).length === 0) {
     //   err.companyLogo = true;
     // }
-
+    console.log({ err });
     setError(err);
     return valid;
   };
@@ -129,6 +146,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
 
   // Example function to pick an image
   const handleDocsPicker = async (side, file) => {
+    console.log("File:", file[0]);
     setLoading(true);
     try {
       // const res = await DocumentPicker.pick({
@@ -146,11 +164,13 @@ const Registration = ({ email, setEmail, setVisible }) => {
       if (file[0]?.length !== 0) {
         setLoading(false);
         if (side === "Pan_card") {
+          console.log("this ran Pan_card");
           setPanCard(file[0]);
           setError({ ...error, panCard: false });
           setLoading(false);
         }
         if (side === "Gst_doc") {
+          console.log("this ran Gst_doc");
           setGst(file[0]);
           setError({ ...error, gst: false });
           setLoading(false);
@@ -175,7 +195,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
   const handleImagePicker = async (side, files) => {
     setLoading(true);
     try {
-      console.log(files);
+      console.log(files[0]);
       setCompanyLogo(files[0]);
       setLogoUploaded(true);
       // const res = await DocumentPicker.pick({
@@ -221,19 +241,51 @@ const Registration = ({ email, setEmail, setVisible }) => {
 
   const handleRegister = async () => {
     const valid = validate();
+    console.log({ valid });
+    console.log("companyLogoFile:", companyLogo);
+    console.log("Pan Card File:", panCard);
+    console.log("GST File:", gst);
+
+    const formData1 = new FormData();
+    formData1.append("company_Logo", companyLogo);
+
+    console.log("formData1 Entries:");
+    formData1.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    // const formData2 = new FormData();
+    // if (panCard) {
+    //   formData2.append("Pan_card", panCard);
+    // }
+    // if (gst) {
+    //   formData2.append("Gst_doc", gst);
+    // }
+
+    // // Log formData2 entries for debugging
+    // console.log("FormData2 Entries:");
+    // formData2.forEach((value, key) => {
+    //   console.log(key, value);
+    // });
+
     if (!valid) return;
+    console.log('error')
+    // return;
+    //
 
     try {
       setLoading(true);
+
       // Prepare form data for the first API call
       const formData1 = new FormData();
       formData1.append("company_Logo", companyLogo);
+
       // First API call
       const response = await axios.post(
         getApiUri(
           `CustomerDetails?CustomerName=${name}&CustomerContactPerson=${contactPersonName}&ContactNo=${mobileNumber}&CustomerGstNo=${gstNo}&CustomerPanNo=${panNo}&CustomerEmail=${email}&contactPersonNumber=${contactPersonNumber}`
         ),
-        logoUploaded == true ? formData1 : null,
+        logoUploaded === true ? formData1 : null,
         {
           headers: {
             Accept: "application/json",
@@ -241,14 +293,28 @@ const Registration = ({ email, setEmail, setVisible }) => {
           },
         }
       );
+
       // Check the response from the first API call
       if (response?.data?.success && response?.data?.data[0]?.mst_customer_id) {
         const customerId = response.data.data[0].mst_customer_id;
+
         // Prepare form data for the second API call
         const formData2 = new FormData();
-        formData2.append("Pan_card", panCard);
-        formData2.append("Gst_doc", gst);
+        if (panCard) {
+          formData2.append("PanCard", panCard);
+        }
+        if (gst) {
+          formData2.append("GST", gst);
+        }
+
+        // Log formData2 entries for debugging
+        console.log("FormData2 Entries:");
+        formData2.forEach((value, key) => {
+          console.log(key, value);
+        });
+
         // Second API call
+        console.log(getApiUri(`CusDocument?Id=${customerId}`))
         const responseUpload = await axios.post(
           getApiUri(`CusDocument?Id=${customerId}`),
           formData2,
@@ -259,38 +325,22 @@ const Registration = ({ email, setEmail, setVisible }) => {
             },
           }
         );
+
         // Check the response from the second API call
         if (
           responseUpload?.data?.includes(
             "Documents uploaded and paths saved successfully"
           )
         ) {
-          // showMessage({
-          //   message: 'Your documents uploaded successfully',
-          //   type: 'success',
-          //   icon: {icon: 'success', position: 'left'},
-          // });
-          // await AsyncStorage.removeItem('USER_CONTEXT');
-          // await AsyncStorage.setItem(
-          //   'USER_CONTEXT',
-          //   JSON.stringify({
-          //     ...response?.data?.data[0],
-          //     companylogo: response?.data?.companylogo,
-          //     msgcode: response?.data?.msgcode,
-          //   }),
-          // );
           setTopic(response?.data?.msg);
-          // setVisible(true);
           setSuccess(true);
           setName("");
-          // setEmail('');
           setContPersonName("");
           setgstNo("");
           setPanNo("");
           setCompanyLogo("");
           setVisible("CREATE_ACCOUNT");
           alert("User Created Successfully");
-          // await authContext.RegistrationDone();
         } else {
           alert("Document upload failed, please try again.");
         }
@@ -299,8 +349,6 @@ const Registration = ({ email, setEmail, setVisible }) => {
       ) {
         setVisible("CREATE_ACCOUNT");
         alert("User Created Successfully");
-        // await authContext.RegistrationDone();
-        // navigation.navigate(ScreensNameEnum.LOGIN);
       } else {
         alert("Registration failed, please try again.");
       }
@@ -517,13 +565,13 @@ const Registration = ({ email, setEmail, setVisible }) => {
               placeholder="Your Pan Number..."
               value={panNo}
               onChange={(e) => setPanNo(e.target.value.toUpperCase())}
-              onFocus={() => setError(null)} // Reset error when the input is focused
+              // onFocus={() => setError(null)} // Reset error when the input is focused
               onBlur={() => {
                 // Validation logic could be added here if needed
               }}
               maxLength={10}
             />
-                        {error?.panNo && (
+            {error?.panNo && (
               <span style={{ color: "red", fontSize: "12px" }}>
                 {error.panNo}
               </span>
@@ -550,7 +598,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
               id="email"
               name="email"
               placeholder="Enter your email..."
-              // value={email}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               maxLength={50}
             />
@@ -608,9 +656,16 @@ const Registration = ({ email, setEmail, setVisible }) => {
             ) : (
               <></>
             )}
-            {logoUploaded && companyLogo.name ? (
+            {logoUploaded && companyLogo?.name ? (
               <div style={styles.fileNameText}>
-                {companyLogo ? companyLogo.name : null}
+                {companyLogo ? companyLogo?.name : null}
+              </div>
+            ) : (
+              <></>
+            )}
+            {error.companyLogo ? (
+              <div style={{ ...styles.err, paddingLeft: 5 }}>
+                Please select your company logo..
               </div>
             ) : (
               <></>
@@ -665,16 +720,22 @@ const Registration = ({ email, setEmail, setVisible }) => {
               </>
             )}
 
-            {panCard.name ? (
+            {panCard?.name ? (
               <div style={styles.fileNameText}>
-                {panCard ? panCard.name : null}
+                {panCard ? panCard?.name : null}
               </div>
             ) : (
               <></>
             )}
             {error.panCard ? (
-              <div style={{ ...styles.err, paddingLeft: 10 }}>
-                Please select your panCard..
+              <div
+                style={{
+                  ...styles.err,
+                  paddingLeft: 10,
+                  alignSelf: "flex-start",
+                }}
+              >
+                {error.panCardErrorText}
               </div>
             ) : null}
           </div>
@@ -727,14 +788,14 @@ const Registration = ({ email, setEmail, setVisible }) => {
                 // />
                 <>{gst?.uri && <img src={gst?.uri} style={styles.image} />}</>
               )}
-              {gst.name ? (
-                <div style={styles.fileNameText}>{gst ? gst.name : null}</div>
+              {gst?.name ? (
+                <div style={styles.fileNameText}>{gst ? gst?.name : null}</div>
               ) : (
                 <></>
               )}
               {error.gst ? (
                 <div style={{ ...styles.err, paddingLeft: 5 }}>
-                  Please select a gst file..
+                  {error.gstErrorText}
                 </div>
               ) : (
                 <></>

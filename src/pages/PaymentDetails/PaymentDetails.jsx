@@ -7,6 +7,7 @@ import { renderToString } from "react-dom/server";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Header from "../../components/Header/Header";
+import DownloadModal from "./Components/DownloadModal";
 
 const PaymentDetails = () => {
   const [data, setData] = useState([]);
@@ -115,6 +116,22 @@ const PaymentDetails = () => {
   //     }
   //   };
 
+  let subtitle;
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = "#f00";
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   const RenderInvoice = ({ item }) => {
     const invoicedata = item;
     return (
@@ -124,15 +141,17 @@ const PaymentDetails = () => {
           boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
           padding: "20px",
           borderRadius: "8px",
+          backgroundImage: "linear-gradient(to bottom,#faf9f9,#f3e2f8)",
+          border: "0.5px solid #3c3c3c",
         }}
       >
-        <h3 style={{ textAlign: "center" }}>Payment Details</h3>
+        <div style={{ textAlign: "center",fontWeight:'bold' }}>Payment Details</div>
 
         <p style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>
+          <div style={{ display: "flex", justifyContent: "start" }}>
             <strong>Company Name:</strong>{" "}
           </div>
-          <div> {invoicedata.mst_customer_name} </div>
+          <div> {invoicedata?.mst_customer_name} </div>
         </p>
 
         <p style={{ display: "flex", justifyContent: "space-between" }}>
@@ -171,7 +190,10 @@ const PaymentDetails = () => {
         </p>
         <div
           style={{ display: "flex", justifyContent: "right" }}
-          onClick={() => generatePDF(invoicedata)}
+          onClick={() => {
+            openModal();
+            // generatePDF(invoicedata)
+          }}
         >
           <div
             style={{
@@ -179,12 +201,25 @@ const PaymentDetails = () => {
               padding: "4px 8px 4px 8px",
               borderRadius: "2px",
               boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-              cursor:'pointer'
+              cursor: "pointer",
             }}
           >
             Download
           </div>
         </div>
+        {modalIsOpen ? (
+          <DownloadModal
+            modalIsOpen={modalIsOpen}
+            setIsOpen={setIsOpen}
+            openModal={openModal}
+            afterOpenModal={afterOpenModal}
+            closeModal={closeModal}
+            subtitle={subtitle}
+            invoiceData={invoicedata}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     );
   };
@@ -505,7 +540,9 @@ const PaymentDetails = () => {
           width: "60%",
         }}
       >
-        <div style={{ width: "48%" }}>
+        <div
+          style={{ width: "48%", border: "1px solid #3c3c3c", borderRadius: 4 }}
+        >
           <Select
             options={monthOptions}
             value={monthOptions.find((option) => option.value === monthValue)}
@@ -516,9 +553,12 @@ const PaymentDetails = () => {
             placeholder="Month*"
           />
         </div>
-        <div style={{ width: "48%" }}>
+        <div
+          style={{ width: "48%", border: "1px solid #3c3c3c", borderRadius: 4 }}
+        >
           <Select
             options={yearOptions}
+            styles={{ border: "none" }}
             value={yearOptions.find((option) => option.value === yearValue)}
             onChange={(option) => {
               setYearValue(option.value);
