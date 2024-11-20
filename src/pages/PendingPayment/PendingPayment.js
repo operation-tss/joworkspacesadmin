@@ -11,10 +11,10 @@ import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
 import Header from "../../components/Header/Header";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   "pdfjs-dist/build/pdf.worker.min.mjs",
+//   import.meta.url
+// ).toString();
 
 const Wrapper = styled.div`
   display: flex;
@@ -173,11 +173,11 @@ export const PendingPayment = () => {
         }
       );
       console.log(cust_Payment_Res.data);
-      setCustomerValue("");
+      // setCustomerValue("");
       setYearValue("");
       setMonthValue("");
       setLoading(false);
-      fetchPendingList();
+      fetchPendingList(customerValue[0].value);
       alert("Data saved successfully");
     } catch (error) {
       console.log("error", error);
@@ -199,7 +199,7 @@ export const PendingPayment = () => {
       style={{ width: "100%", alignItems: "center", justifyContent: "center" }}
     >
       {loading ? (
-        <p>loading</p>
+        <></>
       ) : (
         <div
           style={{
@@ -263,7 +263,7 @@ export const PendingPayment = () => {
                     color: "#236fa1",
                   }}
                 >
-                  Pending Amount
+                  Pending Amount (Rs)
                 </p>
                 <input
                   style={{
@@ -302,7 +302,6 @@ export const PendingPayment = () => {
                 </p>
                 <Dropdown
                   options={[
-                    { label: "Paid", value: "paid" },
                     { label: "Pending", value: "pending" },
                   ]}
                   setValues={setYearValue}
@@ -330,7 +329,7 @@ export const PendingPayment = () => {
                 marginBottom: 20,
               }}
             >
-              Submit
+              {loading ? 'loading...' : 'Submit'}
             </div>
             <p
               style={{
@@ -453,7 +452,7 @@ export const PendingPayment = () => {
                           textAlign: "start",
                         }}
                       >
-                        Pending Amount :
+                        Pending Amoun :
                       </div>
                       <div
                         style={{ width: "55%", fontSize: 15, textAlign: "end" }}

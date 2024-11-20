@@ -1,10 +1,11 @@
 // Import necessary libraries
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Switch from 'react-switch';
-import './ActiveUsers.css';
-import Header from '../../components/Header/Header';
-import getApiUri from '../../utils/api.util';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Switch from "react-switch";
+import "./ActiveUsers.css";
+import Header from "../../components/Header/Header";
+import getApiUri from "../../utils/api.util";
+import Applogo from "../../assets/Applogo.png";
 
 const ActiveUsers = () => {
   const [isActive, setIsActive] = useState(true);
@@ -12,15 +13,15 @@ const ActiveUsers = () => {
   const [loading, setLoading] = useState(false);
 
   const userStatus = {
-    Active: 'green',
-    InActive: 'red',
+    Active: "green",
+    InActive: "red",
   };
 
   useEffect(() => {
     handleToggle(true);
   }, []);
 
-  const handleToggle = async val => {
+  const handleToggle = async (val) => {
     try {
       setLoading(true);
       setIsActive(val);
@@ -38,10 +39,39 @@ const ActiveUsers = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error('Error:', error);
-      alert('Something went wrong, please try again later...');
+      console.error("Error:", error);
+      alert("Something went wrong, please try again later...");
     }
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            columnGap: 50,
+            padding: 50,
+            height: 200,
+          }}
+        >
+          <img src={Applogo} style={{ height: 50, width: 50 }} alt="" />
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="screen-wrapper">
@@ -50,13 +80,13 @@ const ActiveUsers = () => {
         <div className="header-wrapper">
           <h2
             className="title"
-            style={{ color: isActive ? 'green' : 'darkgray' }}
+            style={{ color: isActive ? "green" : "darkgray" }}
           >
-            {isActive ? 'Active Users' : 'Inactive Users'}
+            {isActive ? "Active Users" : "Inactive Users"}
           </h2>
           <Switch
             checked={isActive}
-            onChange={val => handleToggle(val)}
+            onChange={(val) => handleToggle(val)}
             onColor="#0f4734"
             offColor="gray"
             onHandleColor="#30a566"
@@ -77,10 +107,12 @@ const ActiveUsers = () => {
               <div className="table-column">Email</div>
               <div className="table-column">Active User</div>
             </div>
-            {userList.map(item => (
+            {userList.map((item) => (
               <div key={item?.mst_customer_id} className="table-row">
                 <div className="table-column">{item?.mst_customer_name}</div>
-                <div className="table-column">{item?.mst_customer_contact_no}</div>
+                <div className="table-column">
+                  {item?.mst_customer_contact_no}
+                </div>
                 <div className="table-column">{item?.mst_customer_Email}</div>
                 <div
                   className="table-column"

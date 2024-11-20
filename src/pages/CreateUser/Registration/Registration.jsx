@@ -804,7 +804,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
           </div>
         </div>
         <div onClick={handleRegister} className="register-button">
-          Register
+          {loading? 'loading...' :'Register'}
         </div>
       </div>
 

@@ -144,7 +144,7 @@ const CreatePassword = ({email,setEmail, setVisible}) => {
         </div>
 
         <div className="password-form-group">
-          <div onClick={handleOnSubmit} className="button">Save</div>
+          <div onClick={handleOnSubmit} className="button">{loading?'loading...' :'Save'}</div>
         </div>
       </div>
       </div>

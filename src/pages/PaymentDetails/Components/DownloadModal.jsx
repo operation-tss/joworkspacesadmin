@@ -3,15 +3,18 @@ import Modal from "react-modal";
 import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import AppLogo from '../../../assets/Applogo.png'
 
 const customStyles = {
   content: {
-    top: "50%",
+    top: "55%",
     left: "50%",
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
+    width:'50%',
     transform: "translate(-50%, -50%)",
+    border: "0.5px solid #3c3c3c",
   },
 };
 
@@ -38,9 +41,10 @@ const DownloadModal = ({
 
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(
-        `Reciept_${moment(
-          invoiceData.UPLIFT_MST_PAYMENT_CREATEDONDATE
-        ).format("MMM Do YYYY").split().join('_')}.pdf`
+        `Reciept_${moment(invoiceData.UPLIFT_MST_PAYMENT_CREATEDONDATE)
+          .format("MMM Do YYYY")
+          .split()
+          .join("_")}.pdf`
       );
     });
   };
@@ -66,24 +70,52 @@ const DownloadModal = ({
       style={customStyles}
       contentLabel="Example Modal"
     >
-      <div ref={contentRef} style={{ padding: 20, background: "#fff" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginTop: 40
+            }}
+          >
+            <button
+              style={{
+                alignSelf: "end",
+                justifySelf: "flex-start",
+                display: "flex",
+              }}
+              onClick={generatePdf}
+            >
+              Download as PDF
+            </button>
+            <button
+              style={{
+                alignSelf: "end",
+                justifySelf: "flex-end",
+                display: "flex",
+              }}
+              onClick={closeModal}
+            >
+              close
+            </button>
+          </div>
+      <div ref={contentRef} style={{ padding: 10, background: "#fff" }}>
         <div className="invoice-box" style={styles.invoiceBox}>
-          <button onClick={closeModal}>close</button>
           <h1 style={styles.header}>Payment Receipt</h1>
           <table style={styles.table}>
             <tbody>
-              <tr className="top">
+              <tr style={styles.row}>
                 <td colSpan="2">
                   <table style={styles.innerTable}>
                     <tbody>
                       <tr style={styles.flexRow}>
                         <td style={styles.flexRow}>
                           <img
-                            src="https://api.repairindia.in/image/JoLogo.jpeg"
+                            src={AppLogo}
                             alt="Company Logo"
                             style={styles.logoImage}
                           />
-                          <p style={styles.companyName}>workspaces</p>
+                          <div style={{...styles.companyName,fontWeight: 'bold'}}>workspaces</div>
                         </td>
                         <td style={styles.rightAlign}>
                           <div>
@@ -102,25 +134,25 @@ const DownloadModal = ({
                 </td>
               </tr>
 
-              <tr className="information">
+              <tr style={styles.row}>
                 <td colSpan="2">
                   <table style={styles.innerTable}>
                     <tbody>
                       <tr>
-                        <td>
-                          <div>Jupiter Orison. Pvt. Ltd.</div>
-                          <div>Building 96, First Floor,</div>
-                          <div>Udyog Vihar Phase 1,</div>
-                          <div>Email: joworkspaces@gmail.com</div>
-                          <div>Gst: 06AAKCS6706Q2ZN</div>
+                        <td style={{marginRight: '100px'}}>
+                          <div style={styles.fontSize}>Jupiter Orison. Pvt. Ltd.</div>
+                          <div style={styles.fontSize}>Building 96, First Floor,</div>
+                          <div style={styles.fontSize}>Udyog Vihar Phase 1,</div>
+                          <div style={styles.fontSize}>Email: joworkspaces@gmail.com</div>
+                          <div style={styles.fontSize}>Gst: 06AAKCS6706Q2ZN</div>
                         </td>
                         <td style={styles.rightAlign}>
-                          <p style={styles.customerDetailsHeader}>
+                          <p style={{...styles.customerDetailsHeader,fontWeight: 'bold'}}>
                             Customer Details
                           </p>
-                          <div>{invoiceData?.mst_customer_name}</div>
-                          <div>{invoiceData?.mst_customer_Email}</div>
-                          <div>Gst: {invoiceData?.mst_customer_gst_no}</div>
+                          <div style={styles.fontSize}>{invoiceData?.mst_customer_name}</div>
+                          <div style={styles.fontSize}>{invoiceData?.mst_customer_Email}</div>
+                          <div style={styles.fontSize}>Gst: {invoiceData?.mst_customer_gst_no}</div>
                         </td>
                       </tr>
                     </tbody>
@@ -128,47 +160,47 @@ const DownloadModal = ({
                 </td>
               </tr>
 
-              <tr className="heading">
+              <tr style={{...styles.row, backgroundColor: 'lightgray'}}>
                 <td style={styles.bold}>Payment Mode</td>
                 <td style={styles.rightAlign}>
                   {invoiceData?.UPLIFT_MST_PAYMENT_PAYMENT_MODE}
                 </td>
               </tr>
 
-              <tr>
+              <tr style={styles.row}>
                 <td>Payment Status</td>
                 <td style={styles.rightAlign}>
                   {invoiceData?.UPLIFT_MST_PAYMENT_STATUS}
                 </td>
               </tr>
 
-              <tr>
+              <tr style={styles.row}>
                 <td>Payment Receipt Id</td>
                 <td style={styles.rightAlign}>
                   {invoiceData?.UPLIFT_MST_PAYMENT_ORDERID}
                 </td>
               </tr>
 
-              <tr className="details">
+              <tr style={styles.row}>
                 <td>Remarks</td>
                 <td style={styles.rightAlign}>
                   {invoiceData?.UPLIFT_MST_PAYMENT_AMOUNT_DESCRIPTION}
                 </td>
               </tr>
 
-              <tr className="heading">
+              <tr style={{...styles.row, backgroundColor: 'lightgray'}}>
                 <td style={styles.bold}>Description</td>
-                <td style={styles.bold}>Price</td>
+                <td style={{...styles.bold,...styles.rightAlign}}>Price</td>
               </tr>
 
-              <tr className="item">
+              <tr style={styles.row}>
                 <td>Rent Pay</td>
                 <td style={styles.rightAlign}>
                   Rs. {invoiceData?.UPLIFT_MST_PAYMENT_AMOUNT}
                 </td>
               </tr>
 
-              <tr className="total">
+              <tr style={styles.row}>
                 <td></td>
                 <td style={styles.bold}>
                   Total: {invoiceData?.UPLIFT_MST_PAYMENT_AMOUNT}
@@ -182,7 +214,6 @@ const DownloadModal = ({
           </h6>
         </div>
       </div>
-      <button onClick={generatePdf}>Download as PDF</button>
     </Modal>
   );
 };
@@ -204,15 +235,18 @@ const styles = {
     fontSize: "30px",
     fontWeight: "500",
     textAlign: "center",
+    marginBottom: "20px",
   },
   table: {
     width: "100%",
     lineHeight: "inherit",
     textAlign: "left",
     borderCollapse: "collapse",
+    marginBottom: "20px",
   },
   innerTable: {
     width: "100%",
+    marginBottom: "10px",
   },
   flexRow: {
     display: "flex",
@@ -226,15 +260,21 @@ const styles = {
     marginRight: "10px",
   },
   companyName: {
-    fontSize: "30px",
+    fontSize: "20px",
     margin: 0,
   },
   rightAlign: {
     textAlign: "right",
+    paddingRight: "10px",
   },
-  customerDetailsHeader: {
-    fontSize: "20px",
-    marginBottom: 0,
+  leftAlign: {
+    textAlign: "left",
+    paddingLeft: "10px",
+  },
+  row: {
+    borderBottom: "1px solid #ddd",
+    padding: "8px 0",
+    verticalAlign: "middle",
   },
   bold: {
     fontWeight: "bold",
@@ -243,7 +283,24 @@ const styles = {
     textAlign: "center",
     fontStyle: "italic",
     color: "#777",
+    marginTop: "20px",
   },
+  buttonsContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "20px",
+  },
+  button: {
+    padding: "10px 15px",
+    fontSize: "14px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    background: "#f9f9f9",
+    cursor: "pointer",
+  },
+  fontSize: {
+    fontSize: '15px'
+  }
 };
 
 export default DownloadModal;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+// import * as pdfjs from 'pdfjs-dist';
 import "./Home.css";
 import getApiUri from "../../utils/api.util";
 import { useEffect, useState } from "react";
@@ -10,14 +11,17 @@ import cross from "../../assets/cross.png";
 import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
 import Header from "../../components/Header/Header";
-import "react-pdf/dist/esm/Page/TextLayer.css";
+import Applogo from "../../assets/Applogo.png";
+// import "react-pdf/dist/esm/Page/TextLayer.css";
 console.log(
   new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString()
 );
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//   "pdfjs-dist/build/pdf.worker.min.mjs",
+//   import.meta.url
+// ).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.min.mjs`;
+// pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.mjs';
 
 const Wrapper = styled.div`
   display: flex;
@@ -250,17 +254,30 @@ const Home = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1,alignItems:'center' }}>
       <Header />
       <div
         style={{
-          width: "100%",
+          width: "70%",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
         {loading ? (
-          <p>loading</p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              columnGap: 50,
+              padding: 50,
+              height: 200
+            }}
+          >
+            <img src={Applogo} style={{height:50, width:50}} alt="" />
+            Loading...
+          </div>
         ) : (
           <div
             style={{
@@ -283,7 +300,7 @@ const Home = () => {
               }}
             >
               <p style={{ fontWeight: "700", fontSize: 20 }}>
-                Invoice Upload Form
+                Receipt Upload Form
               </p>
               <div
                 style={{
@@ -395,7 +412,7 @@ const Home = () => {
                   marginBottom: 20,
                 }}
               >
-                Submit
+                {loading ? "loading..." : "Submit"}
               </div>
               <p
                 style={{
@@ -406,7 +423,7 @@ const Home = () => {
                   color: "#236fa1",
                 }}
               >
-                Uploaded Invoices
+                Uploaded Receipt
               </p>
               {data.length ? (
                 data.map((item) => {
@@ -556,7 +573,7 @@ const Home = () => {
                 <p>No data found</p>
               )}
             </div>
-            <div
+            {/* <div
               style={{
                 position: "relative",
                 // width: "50%",
@@ -565,7 +582,6 @@ const Home = () => {
                 flex: 1,
               }}
             >
-              {console.log("===-->", { pageNumber, numPages })}
               <Document
                 file={file}
                 onLoadSuccess={({ numPages }) =>
@@ -615,7 +631,7 @@ const Home = () => {
                   renderTextLayer={false}
                 />
               </Document>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
