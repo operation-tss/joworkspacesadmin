@@ -10,6 +10,8 @@ import cross from "../../assets/cross.png";
 import { pdfjs } from "react-pdf";
 import { Document, Page } from "react-pdf";
 import Header from "../../components/Header/Header";
+import Applogo from "../../assets/Applogo.png";
+import moment from 'moment'
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -117,12 +119,11 @@ export const PendingPayment = () => {
 
   const fetchPendingList = async (id) => {
     try {
-      const listRes = await axios.get(getApiUri(`fetch_pending_payment?customer_id=${id}`));
-      console.log(listRes)
-      if (
-        listRes &&
-        listRes?.data?.Status === 200
-      ) {
+      const listRes = await axios.get(
+        getApiUri(`fetch_pending_payment?customer_id=${id}`)
+      );
+      console.log(listRes);
+      if (listRes && listRes?.data?.Status === 200) {
         setData([...listRes?.data?.data?.Table]);
       }
     } catch (error) {
@@ -177,7 +178,8 @@ export const PendingPayment = () => {
       setYearValue("");
       setMonthValue("");
       setLoading(false);
-      fetchPendingList(customerValue[0].value);
+      setData([]);
+      // fetchPendingList(customerValue[0].value);
       alert("Data saved successfully");
     } catch (error) {
       console.log("error", error);
@@ -194,58 +196,53 @@ export const PendingPayment = () => {
   };
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column',flex: 1}}><Header />
-    <div
-      style={{ width: "100%", alignItems: "center", justifyContent: "center" }}
-    >
-      {loading ? (
-        <></>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            columnGap: 50,
-            padding: "5% 15% 10% 15%",
-          }}
-        >
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <Header />
+      <div
+        style={{
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {loading ? (
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              width: "100%",
-              padding: "5%",
-              backgroundColor: '#eee9f0',
-              borderRadius: 10,
-              border: '0.5px solid black',
+              alignItems: "center",
+              justifyContent: "center",
+              columnGap: 50,
+              padding: 50,
+              height: 200,
             }}
           >
-            <p style={{ fontWeight: "700", fontSize: 20 }}>
-              Upload Pending Payment
-            </p>
+            <img src={Applogo} style={{ height: 50, width: 50 }} alt="" />
+            Loading...
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              columnGap: 50,
+              padding: "5% 15% 10% 15%",
+            }}
+          >
             <div
               style={{
-                width: "100%",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "start",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-                columnGap: 20,
+                width: "100%",
+                padding: "5%",
+                backgroundColor: "#eee9f0",
+                borderRadius: 10,
+                border: "0.5px solid black",
               }}
             >
-              <p
-                style={{
-                  fontFamily: "oswald",
-                  fontWeight: "bold",
-                  color: "#236fa1",
-                }}
-              >
-                Customer
+              <p style={{ fontWeight: "700", fontSize: 20 }}>
+                Add Pending Payment
               </p>
-              <Dropdown options={customerItem} setValues={(values)=> {fetchPendingList(values[0].value);setCustomerValue(values)}} />
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "row", columnGap: 20,marginBottom: 40, }}
-            >
               <div
                 style={{
                   width: "100%",
@@ -253,7 +250,6 @@ export const PendingPayment = () => {
                   flexDirection: "column",
                   alignItems: "start",
                   columnGap: 20,
-                  // marginBottom: 20,
                 }}
               >
                 <p
@@ -263,165 +259,211 @@ export const PendingPayment = () => {
                     color: "#236fa1",
                   }}
                 >
-                  Pending Amount (Rs)
+                  Customer
                 </p>
-                <input
+                <Dropdown
+                  options={customerItem}
+                  setValues={(values) => {
+                    fetchPendingList(values[0].value);
+                    setCustomerValue(values);
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  columnGap: 20,
+                  marginBottom: 40,
+                }}
+              >
+                <div
                   style={{
                     width: "100%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "start",
                     columnGap: 20,
-                    borderRadius: 10,
-                    padding: "9px 0px 9px 10px",
-                    borderWidth: 0.5,
                     // marginBottom: 20,
                   }}
-                  onChange={(e) => setMonthValue(e.target.value)}
-                  placeholder="Enter pending amount"
-                />
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "start",
-                  columnGap: 20,
-                  // marginBottom: 20,
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: "oswald",
-                    fontWeight: "bold",
-                    color: "#236fa1",
-                  }}
                 >
-                  Payment Status
-                </p>
-                <Dropdown
-                  options={[
-                    { label: "Pending", value: "pending" },
-                  ]}
-                  setValues={setYearValue}
-                />
-              </div>
-            </div>
-
-            <div
-              onClick={() => {
-                handleUpload();
-              }}
-              className="box"
-              style={{
-                width: "30%",
-                display: 'flex',
-                justifyContent:'center',
-                alignItems: 'center',
-                backgroundColor: "#25a6b8",
-                alignSelf: "center",
-                borderRadius: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
-                color: "#fff",
-                fontWeight: "500",
-                marginBottom: 20,
-              }}
-            >
-              {loading ? 'loading...' : 'Submit'}
-            </div>
-            <p
-              style={{
-                width: "100%",
-                fontSize: 18,
-                fontFamily: "oswald",
-                fontWeight: "bold",
-                color: "#236fa1",
-              }}
-            >
-              Uploaded Pending Status
-            </p>
-            {console.log('--->>>',{data})}
-            {data.length ? (
-              data.map((item) => {
-                const invoicedata = item;
-                console.log("itrm", item);
-                return (
-                  <div
+                  <p
                     style={{
-                      backgroundColor: "#fff",
-                      padding: 20,
-                      borderRadius: 10,
-                      boxShadow: "3px 3px lightgray",
-                      marginBottom: 10,
+                      fontFamily: "oswald",
+                      fontWeight: "bold",
+                      color: "#236fa1",
                     }}
                   >
+                    Pending Amount (Rs)
+                  </p>
+                  <input
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "start",
+                      columnGap: 20,
+                      borderRadius: 10,
+                      padding: "9px 0px 9px 10px",
+                      borderWidth: 0.5,
+                      // marginBottom: 20,
+                    }}
+                    onChange={(e) => setMonthValue(e.target.value)}
+                    placeholder="Enter pending amount"
+                  />
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    columnGap: 20,
+                    // marginBottom: 20,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily: "oswald",
+                      fontWeight: "bold",
+                      color: "#236fa1",
+                    }}
+                  >
+                    Payment Status
+                  </p>
+                  <Dropdown
+                    options={[{ label: "Pending", value: "pending" }]}
+                    setValues={setYearValue}
+                  />
+                </div>
+              </div>
+
+              <div
+                onClick={() => {
+                  handleUpload();
+                }}
+                className="box"
+                style={{
+                  width: "30%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#25a6b8",
+                  alignSelf: "center",
+                  borderRadius: 10,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  color: "#fff",
+                  fontWeight: "500",
+                  marginBottom: 20,
+                }}
+              >
+                {loading ? "loading..." : "Submit"}
+              </div>
+              <p
+                style={{
+                  width: "100%",
+                  fontSize: 18,
+                  fontFamily: "oswald",
+                  fontWeight: "bold",
+                  color: "#236fa1",
+                }}
+              >
+                Show Pending Payments
+              </p>
+              {data.length ? (
+                data.map((item) => {
+                  const invoicedata = item;
+                  console.log("itrm", item);
+                  return (
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        flexDirection: "row",
+                        backgroundColor: "#fff",
+                        padding: 20,
+                        borderRadius: 10,
+                        boxShadow: "3px 3px lightgray",
+                        marginBottom: 10,
                       }}
                     >
                       <div
                         style={{
-                          width: "45%",
-                          fontSize: 15,
-                          fontFamily: "oswald",
-                          fontWeight: "bold",
-                          color: "#236fa1",
-                          textAlign: "start",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                          flexDirection: "row",
                         }}
                       >
-                        Customer Name:
+                        <div
+                          style={{
+                            width: "45%",
+                            fontSize: 15,
+                            fontFamily: "oswald",
+                            fontWeight: "bold",
+                            color: "#236fa1",
+                            textAlign: "start",
+                          }}
+                        >
+                          Customer Name:
+                        </div>
+                        <div
+                          style={{
+                            width: "55%",
+                            fontSize: 18,
+                            textAlign: "end",
+                          }}
+                        >
+                          {
+                            customerItem.find(
+                              (el) =>
+                                el.value ===
+                                invoicedata?.mst_cus_pending_payment_customer_id
+                            ).label
+                          }
+                        </div>
                       </div>
-                      <div
-                        style={{ width: "55%", fontSize: 18, textAlign: "end" }}
-                      >
-                        {customerItem.find(el => el.value === invoicedata?.mst_cus_pending_payment_customer_id).label }
-                      </div>
-                    </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
-                        flexDirection: "row",
-                        paddingTop: 6,
-                      }}
-                    >
                       <div
                         style={{
-                          width: "45%",
-                          fontSize: 15,
-                          fontFamily: "oswald",
-                          fontWeight: "bold",
-                          color: "#236fa1",
-                          textAlign: "start",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          width: "100%",
+                          flexDirection: "row",
+                          paddingTop: 6,
                         }}
                       >
-                        Date Uploaded:
+                        <div
+                          style={{
+                            width: "45%",
+                            fontSize: 15,
+                            fontFamily: "oswald",
+                            fontWeight: "bold",
+                            color: "#236fa1",
+                            textAlign: "start",
+                          }}
+                        >
+                          Date Uploaded:
+                        </div>
+                        <div
+                          style={{
+                            width: "55%",
+                            fontSize: 15,
+                            textAlign: "end",
+                          }}
+                        >
+                          {moment(item?.mst_cus_pending_payment_createdOnDate).format("DD-MM-YYYY")}
+                        </div>
                       </div>
-                      <div
-                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
-                      >
-                        {invoicedata?.mst_cus_pending_payment_updatedOnDate}
-                      </div>
-                    </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        paddingTop: 6,
-                      }}
-                    >
-                      {/* <p
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          flexDirection: "row",
+                          justifyContent: "flex-start",
+                          paddingTop: 6,
+                        }}
+                      >
+                        {/* <p
               style={{
                 width: '45%',
                 fontSize: 18,
@@ -430,36 +472,40 @@ export const PendingPayment = () => {
               }}>
               Invoice:
             </p> */}
-                      {/* <Icon name="file-pdf-box" size={50} style={{color: COLORS.GREEN}} /> */}
-                      <div style={{ backgroundColor: "blue" }}></div>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingTop: 6,
-                      }}
-                    >
+                        {/* <Icon name="file-pdf-box" size={50} style={{color: COLORS.GREEN}} /> */}
+                        <div style={{ backgroundColor: "blue" }}></div>
+                      </div>
                       <div
                         style={{
-                          width: "45%",
-                          fontSize: 15,
-                          fontFamily: "oswald",
-                          fontWeight: "bold",
-                          color: "#236fa1",
-                          textAlign: "start",
+                          display: "flex",
+                          width: "100%",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingTop: 6,
                         }}
                       >
-                        Pending Amoun :
-                      </div>
-                      <div
-                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
-                      >
-                        {invoicedata?.mst_cus_pending_payment_amount}
-                      </div>
-                      {/* <Icon
+                        <div
+                          style={{
+                            width: "45%",
+                            fontSize: 15,
+                            fontFamily: "oswald",
+                            fontWeight: "bold",
+                            color: "#236fa1",
+                            textAlign: "start",
+                          }}
+                        >
+                          Pending Amount :
+                        </div>
+                        <div
+                          style={{
+                            width: "55%",
+                            fontSize: 15,
+                            textAlign: "end",
+                          }}
+                        >
+                          {invoicedata?.mst_cus_pending_payment_amount}
+                        </div>
+                        {/* <Icon
               onPress={() =>
                 downloadFunction(invoicedata?.MST_UPLOAD_INVOICE_PATH)
               }
@@ -467,35 +513,39 @@ export const PendingPayment = () => {
               size={30}
               style={{color: COLORS.GREEN, marginLeft: 10}}
             /> */}
-                      {/* <div style={{ backgroundColor: "blue" }}></div> */}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingTop: 6,
-                      }}
-                    >
+                        {/* <div style={{ backgroundColor: "blue" }}></div> */}
+                      </div>
                       <div
                         style={{
-                          width: "45%",
-                          fontSize: 15,
-                          fontFamily: "oswald",
-                          fontWeight: "bold",
-                          color: "#236fa1",
-                          textAlign: "start",
+                          display: "flex",
+                          width: "100%",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          paddingTop: 6,
                         }}
                       >
-                        Status :
-                      </div>
-                      <div
-                        style={{ width: "55%", fontSize: 15, textAlign: "end" }}
-                      >
-                        {invoicedata?.mst_cus_pending_payment_status}
-                      </div>
-                      {/* <Icon
+                        <div
+                          style={{
+                            width: "45%",
+                            fontSize: 15,
+                            fontFamily: "oswald",
+                            fontWeight: "bold",
+                            color: "#236fa1",
+                            textAlign: "start",
+                          }}
+                        >
+                          Status :
+                        </div>
+                        <div
+                          style={{
+                            width: "55%",
+                            fontSize: 15,
+                            textAlign: "end",
+                          }}
+                        >
+                          {invoicedata?.mst_cus_pending_payment_status}
+                        </div>
+                        {/* <Icon
               onPress={() =>
                 downloadFunction(invoicedata?.MST_UPLOAD_INVOICE_PATH)
               }
@@ -503,18 +553,18 @@ export const PendingPayment = () => {
               size={30}
               style={{color: COLORS.GREEN, marginLeft: 10}}
             /> */}
-                      {/* <div style={{ backgroundColor: "blue" }}></div> */}
+                        {/* <div style={{ backgroundColor: "blue" }}></div> */}
+                      </div>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <p>No data found</p>
-            )}
+                  );
+                })
+              ) : (
+                <p>No data found</p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -50,6 +50,7 @@ function useWindowWidth() {
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const [dataCopy, setDataCopy] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -65,8 +66,11 @@ const Home = () => {
 
   //select month
   const [openMonth, setOpenMonth] = useState(false);
-  const [monthValue, setMonthValue] = useState("");
+  const [monthValue, setMonthValue] = useState([
+    { label: "select", value: "00" },
+  ]);
   const [monthItems, setMonthItems] = useState([
+    { label: "select", value: "00" },
     { label: "January", value: "01" },
     { label: "February", value: "02" },
     { label: "March", value: "03" },
@@ -83,7 +87,7 @@ const Home = () => {
 
   // select Year
   const generateYearItems = (startYear, endYear) => {
-    const items = [];
+    const items = [{ label: "select", value: "0000" }];
     for (let year = startYear; year <= endYear; year++) {
       items.push({ label: year.toString(), value: year.toString() });
     }
@@ -91,7 +95,7 @@ const Home = () => {
   };
   const [openYear, setOpenYear] = useState(false);
   const [yearValue, setYearValue] = useState("");
-  const [yearItems, setYearItems] = useState(generateYearItems(2020, 2050));
+  const [yearItems, setYearItems] = useState(generateYearItems(2024, 2050));
   const [numPages, setNumPages] = useState();
   const [pageNumber, setPageNumber] = useState(1);
   //cutomer Dropdown
@@ -132,27 +136,24 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (customerValue && monthValue && yearValue) {
-      fetchInvoiceList(
-        customerValue[0].value,
-        monthValue[0].value,
-        yearValue[0].value
-      );
+    if (yearValue && yearValue[0].value === "0000") {
+      setData([]);
+      return;
     }
-  }, [customerValue, monthValue, yearValue]);
 
-  const fetchInvoiceList = async (customerValuee, monthValuee, yearValuee) => {
+    if (customerValue && yearValue) {
+      fetchInvoiceList(customerValue[0].value, yearValue[0].value);
+    }
+  }, [customerValue, yearValue]);
+
+  const fetchInvoiceList = async (customerValuee, yearValuee) => {
     console.log("rarnanr");
     try {
       console.log(
-        getApiUri(
-          `CustomeINVOICE?cusid=${customerValuee}&MONTH=${monthValuee}&YEAR=${yearValuee}`
-        )
+        getApiUri(`CustomeINVOICE?cusid=${customerValuee}&YEAR=${yearValuee}`)
       );
       const listRes = await axios.get(
-        getApiUri(
-          `CustomeINVOICE?cusid=${customerValuee}&MONTH=${monthValuee}&YEAR=${yearValuee}`
-        )
+        getApiUri(`CustomeINVOICE?cusid=${customerValuee}&YEAR=${yearValuee}`)
       );
       console.log({ listRes });
       if (
@@ -161,9 +162,36 @@ const Home = () => {
         listRes?.data?.success
       ) {
         setData(listRes?.data?.data);
+        setDataCopy(listRes?.data?.data);
+        if (monthValue && monthValue[0].value !== "00") {
+          console.log("mValue");
+          filterInvoiceByMonth(monthValue, listRes?.data?.data);
+        }
       }
     } catch (error) {
       console.log("error", error);
+    }
+  };
+
+  const filterInvoiceByMonth = (mValue, dataCopyy) => {
+    // console.log({ mValue });
+    // console.log('mValue',{ dataCopyy });
+    let monthFilterData = [...dataCopyy];
+    if (mValue && mValue[0].value !== "00") {
+      monthFilterData = monthFilterData.filter(
+        (datum) => datum?.MST_UPLOAD_INVOICE_MONTHS === mValue[0].label
+      );
+      // console.log({ monthFilterData });
+      setData([...monthFilterData]);
+    } else {
+      if (yearValue && yearValue[0].value === "0000") {
+        setData([]);
+        return;
+      }
+
+      if (customerValue && yearValue) {
+        setData(dataCopy);
+      }
     }
   };
 
@@ -174,19 +202,29 @@ const Home = () => {
   const handleUpload = async () => {
     try {
       // const valid = validate();
-      console.log(file);
-      console.log({
+      console.log({ file });
+      console.log("0sdf--", {
         name: file.name,
         type: file.type,
         uri: file,
       });
       // return;
-      console.log(monthValue[0].value);
-      console.log(yearValue[0].value);
-      console.log(customerValue[0].value);
+      // console.log(monthValue[0].value);
+      // console.log(yearValue[0].value);
+      // console.log(customerValue[0].value);
       setLoading(true);
       const formdata = new FormData();
-      formdata.append("Files", file, file.name);
+      formdata.append("Files", file);
+      console.log("-----sfds", formdata[0]);
+      console.log(customerValue);
+      console.log(monthValue);
+      console.log(yearValue);
+      console.log(
+        getApiUri(
+          `CusInvoice?Id=${customerValue[0].value}&Month=${monthValue[0].value}&year=${yearValue[0].value}`
+        )
+      );
+      // return;
       const cust_Payment_Res = await axios.post(
         getApiUri(
           `CusInvoice?Id=${customerValue[0].value}&Month=${monthValue[0].value}&year=${yearValue[0].value}`
@@ -200,6 +238,7 @@ const Home = () => {
         }
       );
       const trimmedResponse = cust_Payment_Res?.data.trim();
+      console.log({ trimmedResponse });
 
       if (
         cust_Payment_Res &&
@@ -231,7 +270,7 @@ const Home = () => {
           // );
 
           setLoading(false);
-          setData(fetch_user?.data?.data);
+          // setData(fetch_user?.data?.data);
           // setCustomerItem([]);
           setFile({});
         }
@@ -249,12 +288,22 @@ const Home = () => {
       //   text2: 'Something went wrong, please try again later.',
       // });
     } finally {
+      setData([]);
+      setDataCopy([]);
+      setYearValue("");
       setLoading(false); // Ensure loading is turned off
     }
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1,alignItems:'center' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        alignItems: "center",
+      }}
+    >
       <Header />
       <div
         style={{
@@ -272,10 +321,10 @@ const Home = () => {
               justifyContent: "center",
               columnGap: 50,
               padding: 50,
-              height: 200
+              height: 200,
             }}
           >
-            <img src={Applogo} style={{height:50, width:50}} alt="" />
+            <img src={Applogo} style={{ height: 50, width: 50 }} alt="" />
             Loading...
           </div>
         ) : (
@@ -300,7 +349,7 @@ const Home = () => {
               }}
             >
               <p style={{ fontWeight: "700", fontSize: 20 }}>
-                Receipt Upload Form
+                Invoice Upload Form
               </p>
               <div
                 style={{
@@ -323,6 +372,8 @@ const Home = () => {
                 <Dropdown
                   options={customerItem}
                   setValues={(values) => {
+                    // setYearValue({ label: "select", value: "0000" });
+                    // setMonthValue({ label: "select", value: "00" });
                     setCustomerValue(values);
                   }}
                 />
@@ -349,7 +400,14 @@ const Home = () => {
                   >
                     Month
                   </p>
-                  <Dropdown options={monthItems} setValues={setMonthValue} />
+                  <Dropdown
+                    options={monthItems}
+                    // values={monthValue[0]}
+                    setValues={(value) => {
+                      filterInvoiceByMonth(value, dataCopy);
+                      setMonthValue(value);
+                    }}
+                  />
                 </div>
                 <div
                   style={{
@@ -370,7 +428,12 @@ const Home = () => {
                   >
                     Year
                   </p>
-                  <Dropdown options={yearItems} setValues={setYearValue} />
+                  <Dropdown
+                    options={yearItems}
+                    setValues={(value) => {
+                      setYearValue(value);
+                    }}
+                  />
                 </div>
               </div>
 
@@ -383,16 +446,24 @@ const Home = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginBottom: 20,
                 }}
               >
                 <input
                   type="file"
                   style={{ color: "#236fa1" }}
-                  onChange={(e) => setFile(e.target.files[0])}
+                  onChange={(e) => {
+                    if (e.target.files[0]?.size > 1015 * 1024) {
+                      alert("File size should be less than 1 mb");
+                      e.target.value = null;
+                      return;
+                    }
+                    setFile(e.target.files[0]);
+                  }}
                 />
               </div>
-
+              <div style={{ marginBottom: 20, fontSize: 15 }}>
+                Note :- File size should be less than 1 mb
+              </div>
               <div
                 onClick={() => {
                   handleUpload();
@@ -423,8 +494,9 @@ const Home = () => {
                   color: "#236fa1",
                 }}
               >
-                Uploaded Receipt
+                Uploaded Invoices
               </p>
+              {console.log("--->", { data })}
               {data.length ? (
                 data.map((item) => {
                   const invoicedata = item;
@@ -498,7 +570,7 @@ const Home = () => {
                             textAlign: "end",
                           }}
                         >
-                          {invoicedata?.MST_UPLOAD_INVOICE_MONTHS}
+                          {invoicedata?.MST_UPLOAD_INVOICE_MONTHS}{" "}
                           {invoicedata?.MST_UPLOAD_INVOICE_YEAR}
                         </div>
                       </div>

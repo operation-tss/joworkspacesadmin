@@ -6,6 +6,7 @@ import "./ActiveUsers.css";
 import Header from "../../components/Header/Header";
 import getApiUri from "../../utils/api.util";
 import Applogo from "../../assets/Applogo.png";
+import moment from "moment";
 
 const ActiveUsers = () => {
   const [isActive, setIsActive] = useState(true);
@@ -98,7 +99,6 @@ const ActiveUsers = () => {
             width={35}
           />
         </div>
-
         {userList.length > 0 ? (
           <div className="table-wrapper">
             <div className="table-header">
@@ -106,6 +106,7 @@ const ActiveUsers = () => {
               <div className="table-column">Customer No</div>
               <div className="table-column">Email</div>
               <div className="table-column">Active User</div>
+              <div className="table-column">Created On</div>
             </div>
             {userList.map((item) => (
               <div key={item?.mst_customer_id} className="table-row">
@@ -119,6 +120,12 @@ const ActiveUsers = () => {
                   style={{ color: userStatus[item?.Isactive] }}
                 >
                   {item?.Isactive}
+                </div>
+                <div
+                  className="table-column"
+                  style={{ color: userStatus[item?.Isactive] }}
+                >
+                  {moment(item?.Createdon).format("DD-MM-YYYY")}
                 </div>
               </div>
             ))}

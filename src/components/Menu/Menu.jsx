@@ -105,7 +105,7 @@ const Menu = () => {
                   style={{ width: 20, height: 20, marginRight: 10 }}
                   alt=""
                 />
-                Receipt Upload
+                Invoice Upload
               </Link>
             </li>
             <li>

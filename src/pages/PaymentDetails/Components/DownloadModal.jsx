@@ -101,7 +101,7 @@ const DownloadModal = ({
           </div>
       <div ref={contentRef} style={{ padding: 10, background: "#fff" }}>
         <div className="invoice-box" style={styles.invoiceBox}>
-          <h1 style={styles.header}>Payment Receipt</h1>
+          <h1 style={styles.header}>Payment Invoice</h1>
           <table style={styles.table}>
             <tbody>
               <tr style={styles.row}>
@@ -119,7 +119,7 @@ const DownloadModal = ({
                         </td>
                         <td style={styles.rightAlign}>
                           <div>
-                            Payment Receipt No: {generateReceiptNumber()}
+                            Payment Invoice No: {generateReceiptNumber()}
                           </div>
                           <div>
                             Created:{" "}
@@ -175,7 +175,7 @@ const DownloadModal = ({
               </tr>
 
               <tr style={styles.row}>
-                <td>Payment Receipt Id</td>
+                <td>Payment Invoice Id</td>
                 <td style={styles.rightAlign}>
                   {invoiceData?.UPLIFT_MST_PAYMENT_ORDERID}
                 </td>
@@ -209,7 +209,7 @@ const DownloadModal = ({
             </tbody>
           </table>
           <h6 style={styles.note}>
-            This is a digitally generated payment receipt. It does not require
+            This is a digitally generated payment Invoice. It does not require
             any signature or stamp.
           </h6>
         </div>
