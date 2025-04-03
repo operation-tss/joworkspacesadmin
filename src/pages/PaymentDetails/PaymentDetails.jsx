@@ -8,6 +8,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Header from "../../components/Header/Header";
 import DownloadModal from "./Components/DownloadModal";
+import placeHolder from "../../assets/placeholderProfile.png";
 
 const PaymentDetails = () => {
   const [data, setData] = useState([]);
@@ -117,10 +118,10 @@ const PaymentDetails = () => {
   //   };
 
   let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = React.useState("");
 
-  function openModal() {
-    setIsOpen(true);
+  function openModal(orderId) {
+    setIsOpen(orderId);
   }
 
   function afterOpenModal() {
@@ -129,7 +130,7 @@ const PaymentDetails = () => {
   }
 
   function closeModal() {
-    setIsOpen(false);
+    setIsOpen("");
   }
 
   const RenderInvoice = ({ item }) => {
@@ -138,15 +139,40 @@ const PaymentDetails = () => {
       <div
         style={{
           marginBottom: "15px",
+          marginRight: "15px",
+          width: '40%',
           boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
           padding: "20px",
           borderRadius: "8px",
           backgroundImage: "linear-gradient(to bottom,#faf9f9,#f3e2f8)",
           border: "0.5px solid #3c3c3c",
+          // alignSelf: "left",
+          backgroundColor: 'yellow'
         }}
       >
-        <div style={{ textAlign: "center",fontWeight:'bold' }}>Payment Details</div>
-
+        <div
+          style={{
+            marginTop: 10,
+            border: "0.5px solid gray",
+            borderRadius: 5,
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: 0,
+            backgroundColor: "#fff",
+          }}
+        >
+          {invoicedata.mst_customer_logo ? (
+            <img
+              src={invoicedata.mst_customer_logo}
+              alt="Company Logo"
+              style={styles.photo}
+            />
+          ) : (
+            <img src={placeHolder} alt="No Logo" style={styles.photo} />
+          )}
+        </div>
         <p style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex", justifyContent: "start" }}>
             <strong>Company Name:</strong>{" "}
@@ -191,23 +217,27 @@ const PaymentDetails = () => {
         <div
           style={{ display: "flex", justifyContent: "right" }}
           onClick={() => {
-            openModal();
+            openModal(invoicedata.UPLIFT_MST_PAYMENT_ORDERID);
             // generatePDF(invoicedata)
           }}
         >
-          <div
-            style={{
-              backgroundColor: "#25a6b8",
-              padding: "4px 8px 4px 8px",
-              borderRadius: "2px",
-              boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-              cursor: "pointer",
-            }}
-          >
-            Download
-          </div>
+          {invoicedata.UPLIFT_MST_PAYMENT_STATUS === "success" ? (
+            <div
+              style={{
+                backgroundColor: "#25a6b8",
+                padding: "4px 8px 4px 8px",
+                borderRadius: "2px",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                cursor: "pointer",
+              }}
+            >
+              Download
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
-        {modalIsOpen ? (
+        {modalIsOpen === invoicedata.UPLIFT_MST_PAYMENT_ORDERID ? (
           <DownloadModal
             modalIsOpen={modalIsOpen}
             setIsOpen={setIsOpen}
@@ -534,10 +564,20 @@ const PaymentDetails = () => {
       <Header />
       <div
         style={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: 18,
+          marginTop: 20,
+        }}
+      >
+        Payment Details
+      </div>
+      <div
+        style={{
           display: "flex",
           justifyContent: "space-between",
           margin: "20px",
-          width: "60%",
+          width: "70%",
         }}
       >
         <div
@@ -574,13 +614,25 @@ const PaymentDetails = () => {
           flexDirection: "column",
           justifyContent: "space-between",
           margin: "20px",
-          width: "60%",
+          width: "80%",
         }}
       >
         {data.length ? (
-          data.map((item, index) => <RenderInvoice key={index} item={item} />)
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              padding: "10px 7% 10px 7%",
+              justifyContent: 'left',
+              width: '90%',
+            }}
+          >
+            {data.map((item, index) => (
+              <RenderInvoice key={index} item={item} />
+            ))}
+          </div>
         ) : (
-          <p>No Data Available</p>
+          <p style={{alignSelf:'center'}}>No Data Available</p>
         )}
       </div>
     </div>
@@ -588,3 +640,18 @@ const PaymentDetails = () => {
 };
 
 export default PaymentDetails;
+
+const styles = {
+  photo: {
+    width: "100%",
+    height: "250px",
+    objectFit: "fill",
+    // marginBottom: 15,
+  },
+  section: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    // marginBottom: 8,
+  },
+};

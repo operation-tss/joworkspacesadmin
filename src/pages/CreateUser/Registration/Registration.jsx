@@ -53,16 +53,24 @@ const Registration = ({ email, setEmail, setVisible }) => {
       err.mobileNumber = "Enter a Valid phone number";
       valid = false;
     }
+    if (mobileNumber < 10 || mobileNumber > 10) {
+      err.mobileNumber = "Enter a Valid phone number";
+      valid = false;
+    }
     if (email?.length >= 1 && !isValidEmail(email)) {
       valid = false;
       err.email = "Please enter a valid email address...";
     }
     if (contactPersonName == "" && contactPersonName.length == 0) {
       valid = false;
-      err.contactPersonName = "Please enter contct person name.";
+      err.contactPersonName = "Please enter contact person name.";
     }
     if (!ValidationHelper.isPhone(contactPersonNumber)) {
       err.contactPersonNumber = "Enter a Valid contact phone number.";
+      valid = false;
+    }
+    if (contactPersonNumber < 10 || contactPersonNumber > 10) {
+      err.contactPersonNumber = "Enter a Valid phone number";
       valid = false;
     }
     if (!IsvalidateGSTNumber(gstNo)) {
@@ -78,23 +86,23 @@ const Registration = ({ email, setEmail, setVisible }) => {
     if (!gst?.name) {
       valid = false;
       err.gst = true;
-      err.gstErrorText = "Please select your gst.."
+      err.gstErrorText = "Please select your gst..";
     }
-    if(gst?.size > 1015 * 1024) {
+    if (gst?.size > 1015 * 1024) {
       valid = false;
       err.gst = true;
-      err.gstErrorText = "Please select file less than 1mb"
+      err.gstErrorText = "Please select file less than 1mb";
     }
     console.log("panCard?.name", panCard?.name);
     if (!panCard?.name) {
       valid = false;
       err.panCard = true;
-      err.panCardErrorText = "Please select your panCard.."
+      err.panCardErrorText = "Please select your panCard..";
     }
-    if(panCard?.size > 1015 * 1024) {
+    if (panCard?.size > 1015 * 1024) {
       valid = false;
       err.panCard = true;
-      err.panCardErrorText = "Please select file less than 1mb"
+      err.panCardErrorText = "Please select file less than 1mb";
     }
     // if (Object.keys(companyLogo).length === 0) {
     //   err.companyLogo = true;
@@ -269,7 +277,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
     // });
 
     if (!valid) return;
-    console.log('error')
+    console.log("error");
     // return;
     //
 
@@ -314,7 +322,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
         });
 
         // Second API call
-        console.log(getApiUri(`CusDocument?Id=${customerId}`))
+        console.log(getApiUri(`CusDocument?Id=${customerId}`));
         const responseUpload = await axios.post(
           getApiUri(`CusDocument?Id=${customerId}`),
           formData2,
@@ -383,7 +391,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
               fontWeight: "700",
             }}
           >
-            Registration
+            Customer Registration
           </div>
         </div>
         <div style={{ paddingTop: "8%" }}>
@@ -638,9 +646,20 @@ const Registration = ({ email, setEmail, setVisible }) => {
                   type="file"
                   accept="image/*"
                   multiple={false}
-                  onChange={(e) =>
-                    handleImagePicker("company_Logo", e.target.files)
-                  }
+                  onChange={(e) => {
+                    console.log(e.target.files[0].type);
+                    if (
+                      e.target.files[0].type === "image/png" ||
+                      e.target.files[0].type === "image/jpeg" ||
+                      e.target.files[0].type === "image/jpg"
+                    ) {
+                      handleImagePicker("company_Logo", e.target.files);
+                    } else {
+                      alert("Please select Image file");
+                      e.target.value = null;
+                      return;
+                    }
+                  }}
                 />
               </div>
               {/* <Icon
@@ -692,7 +711,21 @@ const Registration = ({ email, setEmail, setVisible }) => {
                 <input
                   className="registration-input picker"
                   type="file"
-                  onChange={(e) => handleDocsPicker("Pan_card", e.target.files)}
+                  onChange={(e) => {
+                    console.log(e.target.files[0].type);
+                    if (
+                      e.target.files[0].type === "application/pdf" ||
+                      e.target.files[0].type === "image/png" ||
+                      e.target.files[0].type === "image/jpeg" ||
+                      e.target.files[0].type === "image/jpg"
+                    ) {
+                      handleDocsPicker("Pan_card", e.target.files);
+                    } else {
+                      alert("Please select PDF file or Image file");
+                      e.target.value = null;
+                      return;
+                    }
+                  }}
                 />
               </div>
               {/* <Icon
@@ -761,7 +794,21 @@ const Registration = ({ email, setEmail, setVisible }) => {
                 <input
                   className="registration-input picker"
                   type="file"
-                  onChange={(e) => handleDocsPicker("Gst_doc", e.target.files)}
+                  onChange={(e) => {
+                    console.log(e.target.files[0].type);
+                    if (
+                      e.target.files[0].type === "application/pdf" ||
+                      e.target.files[0].type === "image/png" ||
+                      e.target.files[0].type === "image/jpeg" ||
+                      e.target.files[0].type === "image/jpg"
+                    ) {
+                      handleDocsPicker("Gst_doc", e.target.files);
+                    } else {
+                      alert("Please select PDF file or Image file");
+                      e.target.value = null;
+                      return;
+                    }
+                  }}
                 />
               </div>
               {/* <Icon
@@ -804,7 +851,7 @@ const Registration = ({ email, setEmail, setVisible }) => {
           </div>
         </div>
         <div onClick={handleRegister} className="register-button">
-          {loading? 'loading...' :'Register'}
+          {loading ? "loading..." : "Register"}
         </div>
       </div>
 

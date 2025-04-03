@@ -6,6 +6,12 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../../components/Header/Header";
 import { useAuth } from "../../../hooks/useAuth";
 import "./Login.css";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export const Login = () => {
   const [username, setUsername] = useState("");
@@ -28,9 +34,31 @@ export const Login = () => {
           },
         }
       );
-      console.log("-->res", response.data);
-      await login(response.data);
+      // console.log("-->resass", response?.data);
+      // console.log("-->rsdfsdfsdes", response?.data?.data?.Table4[0]);
+      if(response?.data?.msg === 'Invalid Credential!!') {
+        // alert("Invalid Credential!!")
+        handleClickOpen()
+      }
+      if(response?.data?.data?.Table4 && response?.data?.data?.Table4[0]?.RoleName !== 'Admin') {
+        // console.log("this ran")
+        // alert("Invalid Credential!!")
+        handleClickOpen()
+      }
+      if (response?.data?.success && response?.data?.data?.Table4[0]?.RoleName === 'Admin') {
+        await login(response?.data);
+      }
     } catch (error) {}
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -52,13 +80,21 @@ export const Login = () => {
             flexDirection: "column",
             width: 500,
             // marginTop: 50,
-            boxShadow: '0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 8px 24px 0 rgba(0, 0, 0, 0.39)',
+            boxShadow:
+              "0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 8px 24px 0 rgba(0, 0, 0, 0.39)",
             borderRadius: 10,
             paddingTop: 50,
             paddingBottom: 50,
           }}
         >
-          <div style={{ fontWeight: "bolder", fontSize: 22, marginBottom: 20,color: '#3c3c3c' }}>
+          <div
+            style={{
+              fontWeight: "bolder",
+              fontSize: 22,
+              marginBottom: 20,
+              color: "#3c3c3c",
+            }}
+          >
             Admin Login
           </div>
           <div
@@ -156,8 +192,39 @@ export const Login = () => {
           >
             Login
           </div>
+          <AlertDialog open={open} setOpen={setOpen} handleClickOpen={handleClickOpen} handleClose={handleClose} />
         </div>
       </div>
     </div>
   );
 };
+
+function AlertDialog({open,setOpen,handleClickOpen,handleClose}) {
+
+  return (
+    <React.Fragment>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" color="#3c3c3c">
+          {"Invalid Credentials"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description" color="#3c3c3c">
+            The Credentials you have entered is Invalid.
+            Please enter correct Credentials.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}></Button>
+          <Button onClick={handleClose} autoFocus>
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}

@@ -101,26 +101,11 @@ const Menu = () => {
                 }`}
               >
                 <img
-                  src={invoice}
+                  src={check}
                   style={{ width: 20, height: 20, marginRight: 10 }}
                   alt=""
                 />
-                Invoice Upload
-              </Link>
-            </li>
-            <li>
-              <Link
-                to={"/pendingPayment"}
-                className={`nav-menu-list ${
-                  location.pathname === "/pendingPayment" ? "selected" : ""
-                }`}
-              >
-                <img
-                  src={pending}
-                  style={{ width: 20, height: 20, marginRight: 10 }}
-                  alt=""
-                />
-                Pending Payment
+                Active Users
               </Link>
             </li>
             <li>
@@ -140,9 +125,9 @@ const Menu = () => {
             </li>
             <li>
               <Link
-                to={"/activeUsers"}
+                to={"/customerDetails"}
                 className={`nav-menu-list ${
-                  location.pathname === "/activeUsers" ? "selected" : ""
+                  location.pathname === "/customerDetails" ? "selected" : ""
                 }`}
               >
                 <img
@@ -150,7 +135,22 @@ const Menu = () => {
                   style={{ width: 20, height: 20, marginRight: 10 }}
                   alt=""
                 />
-                Active Users
+                Customer Details
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={"/invoiceUpload"}
+                className={`nav-menu-list ${
+                  location.pathname === "/invoiceUpload" ? "selected" : ""
+                }`}
+              >
+                <img
+                  src={invoice}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
+                  alt=""
+                />
+                Invoice Upload
               </Link>
             </li>
             <li>
@@ -166,6 +166,21 @@ const Menu = () => {
                   alt=""
                 />
                 Payment Details
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={"/pendingPayment"}
+                className={`nav-menu-list ${
+                  location.pathname === "/pendingPayment" ? "selected" : ""
+                }`}
+              >
+                <img
+                  src={pending}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
+                  alt=""
+                />
+                Pending Payment
               </Link>
             </li>
           </>

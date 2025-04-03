@@ -452,17 +452,23 @@ const Home = () => {
                   type="file"
                   style={{ color: "#236fa1" }}
                   onChange={(e) => {
-                    if (e.target.files[0]?.size > 1015 * 1024) {
-                      alert("File size should be less than 1 mb");
+                    if (e.target.files[0]?.size > 2 * 1024 * 1024) {
+                      alert("File size should be less than 2 mb");
                       e.target.value = null;
                       return;
                     }
-                    setFile(e.target.files[0]);
+                    if (e.target.files[0].type === "application/pdf") {
+                      setFile(e.target.files[0]);
+                    } else {
+                      alert("Please select PDF file");
+                      e.target.value = null;
+                      return;
+                    }
                   }}
                 />
               </div>
               <div style={{ marginBottom: 20, fontSize: 15 }}>
-                Note :- File size should be less than 1 mb
+                Note :- File size should be less than 2 mb
               </div>
               <div
                 onClick={() => {

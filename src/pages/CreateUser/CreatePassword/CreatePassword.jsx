@@ -97,7 +97,7 @@ const CreatePassword = ({email,setEmail, setVisible}) => {
       </div>
 
       <div className="password-form">
-        <div className="password-form-group">
+        <div className="password-form-group" style={{marginBottom: "15px"}}>
           <label className='password-label'>Email*</label>
           <input
             type="email"
@@ -123,7 +123,7 @@ const CreatePassword = ({email,setEmail, setVisible}) => {
             }}
             className="input-field"
           />
-          {/* {error.password && <span className="error">{error.password}</span>} */}
+          {error.password ? <span className="error">{error.password}</span> : <></>}
         </div>
 
         <div className="password-form-group">
@@ -140,7 +140,7 @@ const CreatePassword = ({email,setEmail, setVisible}) => {
             }}
             className="input-field"
           />
-          {/* {error.retypepassword && <span className="error">{error.retypepassword}</span>} */}
+          {error.retypepassword ? <span className="error">{error.retypepassword}</span> :<></>}
         </div>
 
         <div className="password-form-group">

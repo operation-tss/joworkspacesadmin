@@ -303,7 +303,7 @@ export const PendingPayment = () => {
                       flexDirection: "column",
                       alignItems: "start",
                       columnGap: 20,
-                      borderRadius: 10,
+                      borderRadius: 5,
                       padding: "9px 0px 9px 10px",
                       borderWidth: 0.5,
                       // marginBottom: 20,

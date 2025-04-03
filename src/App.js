@@ -15,6 +15,7 @@ import Menu from "./components/Menu/Menu";
 import CreateUser from "./pages/CreateUser/CreateUser";
 import ActiveUsers from "./pages/ActiveUsers/ActiveUsers";
 import PaymentDetails from "./pages/PaymentDetails/PaymentDetails";
+import CustomerDetails from "./pages/CustomerDetails/CustomerDetails";
 
 export default function App() {
   const user = localStorage.getItem("user");
@@ -28,10 +29,11 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/deleteAccount" element={<DeleteAccount />} />
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/invoiceUpload" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/pendingPayment" element={<ProtectedRoute><PendingPayment /></ProtectedRoute>} />
           <Route path="/createUser" element={<ProtectedRoute><CreateUser /></ProtectedRoute>} />
-          <Route path="/activeUsers" element={<ProtectedRoute><ActiveUsers /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><ActiveUsers /></ProtectedRoute>} />
+          <Route path="/customerDetails" element={<ProtectedRoute><CustomerDetails /></ProtectedRoute>} />
           <Route path="/paymentDetails" element={<ProtectedRoute><PaymentDetails /></ProtectedRoute>} />
           <Route path="*" element={<About />} />
         </Routes>

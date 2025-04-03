@@ -31,7 +31,7 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
     let err = { email: "" };
     if (!isValidEmail(email)) {
       valid = false;
-      alert("Please enter a valid email address...");
+      // alert("Please enter a valid email address...");
       err.email = "Please enter a valid email address...";
     }
     setError(err);
@@ -135,8 +135,12 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
   const validateOtp = async () => {
     let valid = true;
     let err = { otp: "" };
-    if (!(otp?.length < 7)) {
+    if (otp?.length < 6) {
       err.otp = "check your otp...";
+      valid = false;
+    }
+    if (genratedOtp !== otp) {
+      err.otp = "wrong otp...";
       valid = false;
     }
     setError(err);
@@ -316,13 +320,13 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
                   />
                 </div>
 
-                {/* {error?.email && (
+                {error?.email && (
                   <span
                     style={{ color: "red", fontSize: "14px", marginTop: "5px" }}
                   >
                     {error.email}
                   </span>
-                )} */}
+                )}
               </div>
             </>
           ) : (
@@ -358,6 +362,11 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
                   justifyContent: "center",
                 }}
               />
+              {error?.otp && (
+                <span style={{ color: "red", fontSize: "14px" }}>
+                  {error.otp}
+                </span>
+              )}
               {/* <OTPInputView
                       style={{width: '100%', height: 80, alignSelf: 'center'}}
                       pinCount={6}
@@ -414,6 +423,7 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
                   fontWeight: "600",
                   textDecorationLine: "underline",
                   marginBottom: 20,
+                  // backgroundColor:'red'
                 }}
               >
                 Resend Otp
@@ -435,12 +445,29 @@ const CreateAccount = ({ email, setEmail, setVisible }) => {
               padding: 10,
             }}
           >
-            <div
-              onClick={()=>loading? ()=>{} : !otpEnabled ? handleLogin() : verifyOtp()}
-              style={{ alignSelf: "center", fontWeight: "bold", fontSize: 16 }}
-            >
-              {loading? 'loading...' : !otpEnabled ? "Continue" : "Verify OTP"}
-            </div>
+            {!otpEnabled ? (
+              <div
+                onClick={() => (loading ? () => {} : handleLogin())}
+                style={{
+                  alignSelf: "center",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {loading ? "loading..." : "Continue"}
+              </div>
+            ) : (
+              <div
+                onClick={() => (loading ? () => {} : verifyOtp())}
+                style={{
+                  alignSelf: "center",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {loading ? "loading..." : "Verify OTP"}
+              </div>
+            )}
           </div>
         </div>
       </div>
